@@ -599,7 +599,8 @@ p {
     position: absolute;
     background: #ffffff;
     border-radius: 50%;
-    pointer-events: none;
+    pointer-events: auto;
+    cursor: pointer;
     z-index: 1;
     animation-name: twinkle;
     animation-iteration-count: infinite;
@@ -718,7 +719,8 @@ p {
 .collection-slot[data-egg="sun"],
 .collection-slot[data-egg="black-hole"],
 .collection-slot[data-egg="asteroid"],
-.collection-slot[data-egg="pixel"] {
+.collection-slot[data-egg="pixel"],
+.collection-slot[data-egg="galaxy"] {
     background: linear-gradient(135deg, #3d3f46 0%, #707aa0 100%);
     border-color: #7d88b2;
     box-shadow: 0 4px 15px rgba(54, 62, 96, 0.26);
@@ -802,7 +804,8 @@ p {
 .collection-slot.filled[data-egg="sun"],
 .collection-slot.filled[data-egg="black-hole"],
 .collection-slot.filled[data-egg="asteroid"],
-.collection-slot.filled[data-egg="pixel"] {
+.collection-slot.filled[data-egg="pixel"],
+.collection-slot.filled[data-egg="galaxy"] {
     background: linear-gradient(135deg, #3d3f46 0%, #7d89b2 100%);
 }
 
@@ -812,13 +815,25 @@ p {
 .collection-slot[data-egg="black-hole"] .slot-label,
 .collection-slot[data-egg="asteroid"] .slot-label,
 .collection-slot[data-egg="pixel"] .slot-label,
+.collection-slot[data-egg="galaxy"] .slot-label,
 .collection-slot[data-egg="eggswing"] .slot-description,
 .collection-slot[data-egg="death"] .slot-description,
 .collection-slot[data-egg="sun"] .slot-description,
 .collection-slot[data-egg="black-hole"] .slot-description,
 .collection-slot[data-egg="asteroid"] .slot-description,
-.collection-slot[data-egg="pixel"] .slot-description {
+.collection-slot[data-egg="pixel"] .slot-description,
+.collection-slot[data-egg="galaxy"] .slot-description {
     color: #ffffff;
+}
+
+.collection-slot[data-egg="eggswing"] .slot-description,
+.collection-slot[data-egg="death"] .slot-description,
+.collection-slot[data-egg="sun"] .slot-description,
+.collection-slot[data-egg="black-hole"] .slot-description,
+.collection-slot[data-egg="asteroid"] .slot-description,
+.collection-slot[data-egg="pixel"] .slot-description,
+.collection-slot[data-egg="galaxy"] .slot-description {
+    background: rgba(34, 38, 56, 0.94);
 }
 
 .collection-slot.filled::before {
