@@ -593,12 +593,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const egg = document.createElement('div');
+        const eggCore = document.createElement('div');
         const width = 54;
         const height = 68;
 
         egg.className = 'egg galaxy-egg';
-        egg.style.backgroundImage = 'url(images/galaxyegg.png)';
-        egg.style.backgroundSize = 'cover';
         egg.style.width = `${width}px`;
         egg.style.height = `${height}px`;
         egg.style.position = 'absolute';
@@ -606,6 +605,11 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.left = `${Math.max(0, Math.min(800 - width, left - width / 2))}px`;
         egg.style.top = `${Math.max(0, Math.min(600 - height, top - height / 2))}px`;
         egg.style.zIndex = '3';
+
+        eggCore.className = 'galaxy-egg-core';
+        eggCore.style.backgroundImage = 'url(images/galaxyegg.png)';
+
+        egg.appendChild(eggCore);
         egg.addEventListener('click', () => {
             emitScreenParticlesAtElement(egg, 'galaxy');
             egg.remove();
