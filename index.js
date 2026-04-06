@@ -628,8 +628,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const egg = document.createElement('div');
         const width = 52;
         const height = 66;
-        const left = 170 + Math.random() * 420;
-        const top = 420 + Math.random() * 110;
+        const left = Math.random() * (800 - width);
+        const top = Math.random() * (600 - height);
 
         egg.className = 'egg trash-egg';
         egg.style.backgroundImage = 'url(images/trashegg.png)';
