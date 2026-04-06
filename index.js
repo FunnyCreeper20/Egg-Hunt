@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const gameArea = document.getElementById('game-area');
     const countElement = document.getElementById('count');
     const totalElement = document.getElementById('total');
+    const introEggElement = document.querySelector('.intro-egg');
     const collectionSlots = document.querySelectorAll('.collection-slot');
     const backgrounds = [
         'linear-gradient(to bottom, #87ceeb, #98fb98)', // sky to grass
@@ -10,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     let currentBg = 0; //0 is field, 1 is ocean, 2 is space
+    let introEggFound = false; // track if the intro egg has been found
     let eggFound = false; // track if the floral egg has been found
     let smallEggFound = false; // track if the small egg has been found
     let woodEggFound = false; // track if the wood egg has been found
@@ -170,6 +172,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const blueEggs = ['bubble', 'fish', 'coral', 'sunken', 'trash', 'ice', 'kraken'];
         const darkEggs = ['eggswing', 'death', 'sun', 'black-hole', 'asteroid', 'pixel'];
 
+        if (eggType === 'intro') {
+            return ['#ffd76a', '#ffbf3c', '#fff0a8'];
+        }
+
         if (greenEggs.includes(eggType)) {
             return ['#9dd96f', '#66bb55', '#c8f08b'];
         }
@@ -261,9 +267,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const description = slot.dataset.description || '';
+        const collectionVisual = eggType === 'intro'
+            ? '<span class="collection-emoji" aria-hidden="true">🥚</span>'
+            : `<img class="collection-egg" src="${imagePath}" alt="${label}">`;
         slot.classList.add('filled');
         slot.innerHTML = `
-            <img class="collection-egg" src="${imagePath}" alt="${label}">
+            ${collectionVisual}
             <span class="slot-label">${label}</span>
             <span class="slot-description">${description}</span>
         `;
@@ -376,6 +385,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         comingSoonEggFound = true;
         addEggToCollection('coming-soon', 'images/comingsoonegg.png', 'Coming Soon Egg');
+    }
+
+    function collectIntroEgg() {
+        if (introEggFound || !introEggElement) {
+            return;
+        }
+
+        introEggFound = true;
+        addEggToCollection('intro', 'images/comingsoonegg.png', 'Intro Egg');
+        introEggElement.classList.add('intro-egg-found');
+        introEggElement.setAttribute('aria-hidden', 'true');
+        introEggElement.removeAttribute('role');
+        introEggElement.removeAttribute('tabindex');
     }
 
     function addPixelEggAtPlanet(planet) {
@@ -1444,6 +1466,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (comingSoonSlot) {
         comingSoonSlot.classList.add('collection-preview');
         comingSoonSlot.addEventListener('click', revealComingSoonEgg);
+    }
+
+    if (introEggElement) {
+        introEggElement.addEventListener('click', collectIntroEgg);
+        introEggElement.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                collectIntroEgg();
+            }
+        });
     }
 
     updateScore();
