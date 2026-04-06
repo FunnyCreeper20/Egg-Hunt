@@ -826,6 +826,38 @@ p {
     color: #ffffff;
 }
 
+.collection-slot[data-egg="small"] .slot-description,
+.collection-slot[data-egg="floral"] .slot-description,
+.collection-slot[data-egg="cloud"] .slot-description,
+.collection-slot[data-egg="rain"] .slot-description,
+.collection-slot[data-egg="wood"] .slot-description,
+.collection-slot[data-egg="maple"] .slot-description,
+.collection-slot[data-egg="snow"] .slot-description {
+    background: rgba(244, 251, 233, 0.96);
+    border: 2px dashed rgba(142, 185, 107, 0.85);
+    color: #4f6e32;
+}
+
+.collection-slot[data-egg="bubble"] .slot-description,
+.collection-slot[data-egg="fish"] .slot-description,
+.collection-slot[data-egg="coral"] .slot-description,
+.collection-slot[data-egg="sunken"] .slot-description,
+.collection-slot[data-egg="trash"] .slot-description,
+.collection-slot[data-egg="ice"] .slot-description,
+.collection-slot[data-egg="kraken"] .slot-description {
+    background: rgba(237, 248, 255, 0.96);
+    border: 2px dashed rgba(111, 169, 208, 0.9);
+    color: #3c6d91;
+}
+
+.collection-slot[data-egg="intro"] .slot-description,
+.collection-slot[data-egg="direction"] .slot-description,
+.collection-slot[data-egg="coming-soon"] .slot-description {
+    background: rgba(255, 247, 217, 0.96);
+    border: 2px dashed rgba(223, 172, 65, 0.88);
+    color: #9a6a15;
+}
+
 .collection-slot[data-egg="eggswing"] .slot-description,
 .collection-slot[data-egg="death"] .slot-description,
 .collection-slot[data-egg="sun"] .slot-description,
@@ -834,6 +866,34 @@ p {
 .collection-slot[data-egg="pixel"] .slot-description,
 .collection-slot[data-egg="galaxy"] .slot-description {
     background: rgba(34, 38, 56, 0.94);
+    border: 2px dashed rgba(125, 136, 178, 0.88);
+}
+
+.collection-slot.filled[data-egg="small"] .slot-description,
+.collection-slot.filled[data-egg="floral"] .slot-description,
+.collection-slot.filled[data-egg="cloud"] .slot-description,
+.collection-slot.filled[data-egg="rain"] .slot-description,
+.collection-slot.filled[data-egg="wood"] .slot-description,
+.collection-slot.filled[data-egg="maple"] .slot-description,
+.collection-slot.filled[data-egg="snow"] .slot-description,
+.collection-slot.filled[data-egg="bubble"] .slot-description,
+.collection-slot.filled[data-egg="fish"] .slot-description,
+.collection-slot.filled[data-egg="coral"] .slot-description,
+.collection-slot.filled[data-egg="sunken"] .slot-description,
+.collection-slot.filled[data-egg="trash"] .slot-description,
+.collection-slot.filled[data-egg="ice"] .slot-description,
+.collection-slot.filled[data-egg="kraken"] .slot-description,
+.collection-slot.filled[data-egg="intro"] .slot-description,
+.collection-slot.filled[data-egg="direction"] .slot-description,
+.collection-slot.filled[data-egg="coming-soon"] .slot-description,
+.collection-slot.filled[data-egg="eggswing"] .slot-description,
+.collection-slot.filled[data-egg="death"] .slot-description,
+.collection-slot.filled[data-egg="sun"] .slot-description,
+.collection-slot.filled[data-egg="black-hole"] .slot-description,
+.collection-slot.filled[data-egg="asteroid"] .slot-description,
+.collection-slot.filled[data-egg="pixel"] .slot-description,
+.collection-slot.filled[data-egg="galaxy"] .slot-description {
+    border-style: solid;
 }
 
 .collection-slot.filled::before {
@@ -878,7 +938,7 @@ p {
     transition: opacity 0.2s ease, transform 0.25s ease;
 }
 
-.collection-slot.filled:hover .slot-description {
+.collection-slot:hover .slot-description {
     opacity: 1;
     transform: translateY(0);
 }
