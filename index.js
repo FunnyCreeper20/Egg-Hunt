@@ -1300,36 +1300,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 6200);
     }
 
-    // Initial decorations for field
-    if (currentBg === 0) {
-        addCloud();
-        addCloudEgg();
-        addCanadaTree();
-        addMapleEgg();
-        addWoodEgg();
-        addGreenEgg();
-        addSmallEgg();
-        addFlowers();
-    } else if (currentBg === 1) {
-        addCoralDecorations();
-        addShipwreck();
-        addCoralEgg();
-        addSunkenEgg();
-        addTrashEgg();
-        addIceEgg();
-        addBubbles();
-        addBubbleEggs();
-        addFishEggs();
-        startTentacleCycle();
-    } else if (currentBg === 2) {
-        addStars();
-        addPlanet();
-        addEggSwing();
-        addAsteroidEgg();
-        addDeathEgg();
-        addSunEgg();
-        addBlackHoleEgg();
+    function renderCurrentScene() {
+        gameArea.style.background = backgrounds[currentBg];
+        clearDecorations();
+
+        if (currentBg === 0) {
+            addCloud();
+            addCloudEgg();
+            addCanadaTree();
+            addMapleEgg();
+            addWoodEgg();
+            addGreenEgg();
+            addSmallEgg();
+            addFlowers();
+        } else if (currentBg === 1) {
+            addCoralDecorations();
+            addShipwreck();
+            addCoralEgg();
+            addSunkenEgg();
+            addTrashEgg();
+            addIceEgg();
+            addBubbles();
+            addBubbleEggs();
+            addFishEggs();
+            startTentacleCycle();
+        } else if (currentBg === 2) {
+            addStars();
+            addPlanet();
+            addEggSwing();
+            addAsteroidEgg();
+            addDeathEgg();
+            addSunEgg();
+            addBlackHoleEgg();
+        }
     }
+
+    function changeScene(direction) {
+        currentBg = (currentBg + direction + backgrounds.length) % backgrounds.length;
+        renderCurrentScene();
+    }
+
+    // Initial decorations for field
+    renderCurrentScene();
 
     collectionSlots.forEach(slot => {
         if (!slot.dataset.egg) {
@@ -1347,72 +1359,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Background change buttons
     document.getElementById('left-arrow').addEventListener('click', () => {
-        currentBg = (currentBg - 1 + backgrounds.length) % backgrounds.length;
-        gameArea.style.background = backgrounds[currentBg];
-        clearDecorations();
-        if (currentBg === 0) {
-            addCloud();
-            addCloudEgg();
-            addCanadaTree();
-            addMapleEgg();
-            addWoodEgg();
-            addGreenEgg();
-            addSmallEgg();
-            addFlowers();
-        } else if (currentBg === 1) {
-            addCoralDecorations();
-            addShipwreck();
-            addCoralEgg();
-            addSunkenEgg();
-            addTrashEgg();
-            addIceEgg();
-            addBubbles();
-            addBubbleEggs();
-            addFishEggs();
-            startTentacleCycle();
-        } else if (currentBg === 2) {
-            addStars();
-            addPlanet();
-            addEggSwing();
-            addAsteroidEgg();
-            addDeathEgg();
-            addSunEgg();
-            addBlackHoleEgg();
-        }
+        changeScene(-1);
     });
 
     document.getElementById('right-arrow').addEventListener('click', () => {
-        currentBg = (currentBg + 1) % backgrounds.length;
-        gameArea.style.background = backgrounds[currentBg];
-        clearDecorations();
-        if (currentBg === 0) {
-            addCloud();
-            addCloudEgg();
-            addCanadaTree();
-            addMapleEgg();
-            addWoodEgg();
-            addGreenEgg();
-            addSmallEgg();
-            addFlowers();
-        } else if (currentBg === 1) {
-            addCoralDecorations();
-            addShipwreck();
-            addCoralEgg();
-            addSunkenEgg();
-            addTrashEgg();
-            addIceEgg();
-            addBubbles();
-            addBubbleEggs();
-            addFishEggs();
-            startTentacleCycle();
-        } else if (currentBg === 2) {
-            addStars();
-            addPlanet();
-            addEggSwing();
-            addAsteroidEgg();
-            addDeathEgg();
-            addSunEgg();
-            addBlackHoleEgg();
+        changeScene(1);
+    });
+
+    document.addEventListener('keydown', event => {
+        if (event.repeat) {
+            return;
+        }
+
+        if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
+            changeScene(-1);
+        } else if (event.key === 'ArrowRight' || event.key === 'd' || event.key === 'D') {
+            changeScene(1);
         }
     });
 });
