@@ -15,14 +15,18 @@
     </head>
     <body>
         <h1>Egg Hunt Game</h1>
-        <p>Find all the hidden eggs! Click on them to collect.</p>
+        <p>Find all the hidden eggs <span class="intro-egg" role="button" tabindex="0" aria-label="Collect the intro egg">🥚</span>! Click on them to collect.</p>
         <div id="game-container">
             <button id="left-arrow">&larr;</button>
             <div id="game-area"></div>
             <button id="right-arrow">&rarr;</button>
         </div>
-        <div id="score">Eggs found: <span id="count">0</span> / <span id="total">21</span></div>
+        <div id="score">Eggs found: <span id="count">0</span> / <span id="total">22</span></div>
         <div id="collection">
+            <div class="collection-slot" data-egg="intro" data-description="A sneaky egg hiding right in the intro text.">
+                <span class="slot-label">Intro Egg</span>
+                <span class="slot-description">A sneaky egg hiding right in the intro text.</span>
+            </div>
             <div class="collection-slot" data-egg="floral" data-description="A flower-covered egg hidden low in the field.">
                 <span class="slot-label">Floral Egg</span>
                 <span class="slot-description">A flower-covered egg hidden low in the field.</span>
