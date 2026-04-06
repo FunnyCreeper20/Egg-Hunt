@@ -706,6 +706,7 @@ p {
 }
 
 .collection-slot[data-egg="intro"],
+.collection-slot[data-egg="direction"],
 .collection-slot[data-egg="coming-soon"] {
     background: linear-gradient(135deg, #fff2c4 0%, #ffd77a 100%);
     border-color: #dfac41;
@@ -761,6 +762,10 @@ p {
     animation: collection-particle-burst 0.7s ease-out forwards;
 }
 
+.viewport-particle {
+    position: fixed;
+}
+
 .collection-slot.filled {
     border-style: solid;
     background: linear-gradient(135deg, #fff8ef 0%, #ffd7b5 100%);
@@ -787,6 +792,7 @@ p {
 }
 
 .collection-slot.filled[data-egg="intro"],
+.collection-slot.filled[data-egg="direction"],
 .collection-slot.filled[data-egg="coming-soon"] {
     background: linear-gradient(135deg, #fff7d9 0%, #ffe39a 100%);
 }
