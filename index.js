@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let currentBg = 0; //0 is field, 1 is ocean, 2 is space
     let introEggFound = false; // track if the intro egg has been found
+    let directionEggFound = false; // track if the direction egg has been found
     let eggFound = false; // track if the floral egg has been found
     let smallEggFound = false; // track if the small egg has been found
     let woodEggFound = false; // track if the wood egg has been found
@@ -49,6 +50,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let asteroidEggIntervalId = null;
     let blackHoleAttractionIntervalId = null;
     let iceEggIntervalId = null;
+    let directionEggIntervalId = null;
+    let directionEggX = null;
+    let directionEggY = null;
+    let directionEggLastInputAt = 0;
     gameArea.style.background = backgrounds[currentBg];
 
     function stopRainEggCycle() {
@@ -127,6 +132,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function stopDirectionEggCycle() {
+        if (directionEggIntervalId !== null) {
+            clearInterval(directionEggIntervalId);
+            directionEggIntervalId = null;
+        }
+    }
+
     function updateScore() {
         countElement.textContent = eggsCollected;
 
@@ -173,6 +185,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const darkEggs = ['eggswing', 'death', 'sun', 'black-hole', 'asteroid', 'pixel'];
 
         if (eggType === 'intro') {
+            return ['#ffd76a', '#ffbf3c', '#fff0a8'];
+        }
+
+        if (eggType === 'direction') {
             return ['#ffd76a', '#ffbf3c', '#fff0a8'];
         }
 
@@ -252,6 +268,41 @@ document.addEventListener('DOMContentLoaded', function() {
             particle.style.setProperty('--particle-rotate', `${-120 + Math.random() * 240}deg`);
 
             gameArea.appendChild(particle);
+
+            setTimeout(() => {
+                particle.remove();
+            }, 700);
+        }
+    }
+
+    function emitViewportParticlesAtElement(element, eggType) {
+        if (!element || !element.isConnected) {
+            return;
+        }
+
+        const colors = getCollectionParticlePalette(eggType);
+        const elementRect = element.getBoundingClientRect();
+        const centerX = elementRect.left + elementRect.width / 2;
+        const centerY = elementRect.top + elementRect.height / 2;
+
+        for (let i = 0; i < 14; i += 1) {
+            const particle = document.createElement('span');
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 16 + Math.random() * 36;
+            const size = 5 + Math.random() * 7;
+
+            particle.className = 'screen-particle viewport-particle';
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${centerX}px`;
+            particle.style.top = `${centerY}px`;
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.color = particle.style.background;
+            particle.style.setProperty('--particle-x', `${Math.cos(angle) * distance}px`);
+            particle.style.setProperty('--particle-y', `${Math.sin(angle) * distance}px`);
+            particle.style.setProperty('--particle-rotate', `${-120 + Math.random() * 240}deg`);
+
+            document.body.appendChild(particle);
 
             setTimeout(() => {
                 particle.remove();
@@ -398,6 +449,97 @@ document.addEventListener('DOMContentLoaded', function() {
         introEggElement.setAttribute('aria-hidden', 'true');
         introEggElement.removeAttribute('role');
         introEggElement.removeAttribute('tabindex');
+    }
+
+    function initializeDirectionEggPosition() {
+        if (directionEggX !== null && directionEggY !== null) {
+            return;
+        }
+
+        const width = 52;
+        const height = 66;
+        const viewportWidth = window.innerWidth;
+        directionEggX = viewportWidth / 2 - width / 2;
+        directionEggY = -height - 25;
+    }
+
+    function updateDirectionEggElementPosition() {
+        const egg = document.querySelector('.direction-egg');
+
+        if (!egg || directionEggX === null || directionEggY === null) {
+            return;
+        }
+
+        egg.style.left = `${directionEggX}px`;
+        egg.style.top = `${directionEggY}px`;
+    }
+
+    function moveDirectionEggTowardCenter() {
+        if (directionEggFound) {
+            return;
+        }
+
+        initializeDirectionEggPosition();
+        directionEggLastInputAt = Date.now();
+
+        const width = 52;
+        const height = 66;
+        const centerX = window.innerWidth / 2 - width / 2;
+        const centerY = window.innerHeight / 2 - height / 2;
+        const dx = centerX - directionEggX;
+        const dy = centerY - directionEggY;
+        const distance = Math.hypot(dx, dy) || 1;
+        const step = Math.min(4, distance);
+
+        directionEggX += (dx / distance) * step;
+        directionEggY += (dy / distance) * step;
+        updateDirectionEggElementPosition();
+    }
+
+    function startDirectionEggCycle() {
+        if (directionEggFound || directionEggIntervalId !== null) {
+            return;
+        }
+
+        directionEggIntervalId = setInterval(() => {
+            if (directionEggFound) {
+                stopDirectionEggCycle();
+                return;
+            }
+
+            const egg = document.querySelector('.direction-egg');
+
+            if (!egg) {
+                return;
+            }
+
+            if (Date.now() - directionEggLastInputAt < 650) {
+                return;
+            }
+
+            const width = 52;
+            const height = 66;
+            const centerX = window.innerWidth / 2 - width / 2;
+            const centerY = window.innerHeight / 2 - height / 2;
+            const dx = directionEggX - centerX;
+            const dy = directionEggY - centerY;
+            const distance = Math.hypot(dx, dy) || 1;
+            const drift = 1.1;
+            const maxOffscreenDistance = 110;
+
+            if (
+                directionEggX < -width - maxOffscreenDistance ||
+                directionEggX > window.innerWidth + maxOffscreenDistance ||
+                directionEggY < -height - maxOffscreenDistance ||
+                directionEggY > window.innerHeight + maxOffscreenDistance
+            ) {
+                return;
+            }
+
+            directionEggX += (dx / distance) * drift;
+            directionEggY += (dy / distance) * drift;
+            updateDirectionEggElementPosition();
+        }, 45);
     }
 
     function addPixelEggAtPlanet(planet) {
@@ -567,6 +709,7 @@ document.addEventListener('DOMContentLoaded', function() {
         stopAsteroidEggCycle();
         stopBlackHoleAttraction();
         stopIceEggCycle();
+        stopDirectionEggCycle();
         const decorations = gameArea.querySelectorAll('.egg, .flower, .tree, .star, .cloud, .rain-egg, .snow-egg, .bubble, .bubble-egg, .fish-egg, .ship, .tentacle, .ink-splotch, .egg-swing, .asteroid-egg, .planet, .planet-explosion, .screen-particle');
         decorations.forEach(d => d.remove());
     }
@@ -611,6 +754,44 @@ document.addEventListener('DOMContentLoaded', function() {
             addEggToCollection('small', 'images/smallegg.png', 'Small Egg');
         });
         gameArea.appendChild(egg);
+    }
+
+    function addDirectionEgg() {
+        if (directionEggFound) {
+            return;
+        }
+
+        const existingEgg = document.querySelector('.direction-egg');
+
+        if (existingEgg) {
+            updateDirectionEggElementPosition();
+            startDirectionEggCycle();
+            return;
+        }
+
+        initializeDirectionEggPosition();
+
+        const egg = document.createElement('div');
+        egg.className = 'egg direction-egg';
+        egg.style.backgroundImage = 'url(images/directionegg.png)';
+        egg.style.backgroundSize = 'cover';
+        egg.style.width = '52px';
+        egg.style.height = '66px';
+        egg.style.position = 'fixed';
+        egg.style.cursor = 'pointer';
+        egg.style.zIndex = '20';
+        egg.style.left = `${directionEggX}px`;
+        egg.style.top = `${directionEggY}px`;
+        egg.addEventListener('click', () => {
+            emitViewportParticlesAtElement(egg, 'direction');
+            directionEggFound = true;
+            stopDirectionEggCycle();
+            egg.remove();
+            addEggToCollection('direction', 'images/directionegg.png', 'Direction Egg');
+        });
+
+        document.body.appendChild(egg);
+        startDirectionEggCycle();
     }
 
     function addWoodEgg() {
@@ -1446,9 +1627,12 @@ document.addEventListener('DOMContentLoaded', function() {
             addSunEgg();
             addBlackHoleEgg();
         }
+
+        addDirectionEgg();
     }
 
     function changeScene(direction) {
+        moveDirectionEggTowardCenter();
         currentBg = (currentBg + direction + backgrounds.length) % backgrounds.length;
         renderCurrentScene();
     }
