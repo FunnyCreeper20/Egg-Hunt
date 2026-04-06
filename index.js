@@ -165,6 +165,94 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5200);
     }
 
+    function getCollectionParticlePalette(eggType) {
+        const greenEggs = ['small', 'floral', 'cloud', 'rain', 'wood', 'maple', 'snow'];
+        const blueEggs = ['bubble', 'fish', 'coral', 'sunken', 'trash', 'ice', 'kraken'];
+        const darkEggs = ['eggswing', 'death', 'sun', 'black-hole', 'asteroid', 'pixel'];
+
+        if (greenEggs.includes(eggType)) {
+            return ['#9dd96f', '#66bb55', '#c8f08b'];
+        }
+
+        if (blueEggs.includes(eggType)) {
+            return ['#8bd4ff', '#53aee8', '#c2ecff'];
+        }
+
+        if (darkEggs.includes(eggType)) {
+            return ['#050505', '#1a1a1a', '#343434'];
+        }
+
+        if (eggType === 'coming-soon') {
+            return ['#ffd76a', '#ffbf3c', '#fff0a8'];
+        }
+
+        return ['#ffd7a3', '#f0a05a', '#fff1dc'];
+    }
+
+    function emitCollectionParticles(slot, eggType) {
+        const colors = getCollectionParticlePalette(eggType);
+
+        for (let i = 0; i < 14; i += 1) {
+            const particle = document.createElement('span');
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 18 + Math.random() * 42;
+            const size = 6 + Math.random() * 7;
+
+            particle.className = 'collection-particle';
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${50 + (Math.random() * 16 - 8)}%`;
+            particle.style.top = `${42 + (Math.random() * 12 - 6)}%`;
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.color = particle.style.background;
+            particle.style.setProperty('--particle-x', `${Math.cos(angle) * distance}px`);
+            particle.style.setProperty('--particle-y', `${Math.sin(angle) * distance}px`);
+            particle.style.setProperty('--particle-rotate', `${-120 + Math.random() * 240}deg`);
+
+            slot.appendChild(particle);
+
+            setTimeout(() => {
+                particle.remove();
+            }, 700);
+        }
+    }
+
+    function emitScreenParticlesAtElement(element, eggType) {
+        if (!element || !element.isConnected) {
+            return;
+        }
+
+        const colors = getCollectionParticlePalette(eggType);
+        const gameRect = gameArea.getBoundingClientRect();
+        const elementRect = element.getBoundingClientRect();
+        const centerX = elementRect.left - gameRect.left + elementRect.width / 2;
+        const centerY = elementRect.top - gameRect.top + elementRect.height / 2;
+
+        for (let i = 0; i < 14; i += 1) {
+            const particle = document.createElement('span');
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 16 + Math.random() * 36;
+            const size = 5 + Math.random() * 7;
+
+            particle.className = 'screen-particle';
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${centerX}px`;
+            particle.style.top = `${centerY}px`;
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.color = particle.style.background;
+            particle.style.setProperty('--particle-x', `${Math.cos(angle) * distance}px`);
+            particle.style.setProperty('--particle-y', `${Math.sin(angle) * distance}px`);
+            particle.style.setProperty('--particle-rotate', `${-120 + Math.random() * 240}deg`);
+
+            gameArea.appendChild(particle);
+
+            setTimeout(() => {
+                particle.remove();
+            }, 700);
+        }
+    }
+
     function addEggToCollection(eggType, imagePath, label) {
         const slot = document.querySelector(`.collection-slot[data-egg="${eggType}"]`);
 
@@ -179,6 +267,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <span class="slot-label">${label}</span>
             <span class="slot-description">${description}</span>
         `;
+        requestAnimationFrame(() => {
+            emitCollectionParticles(slot, eggType);
+        });
 
         eggsCollected += 1;
         updateScore();
@@ -312,10 +403,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.zIndex = '3';
 
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'pixel');
             egg.remove();
             pixelEggFound = true;
             addEggToCollection('pixel', 'images/pixelegg.png', 'Pixel Egg');
-            alert('You found the pixel egg!');
         });
 
         gameArea.appendChild(egg);
@@ -339,10 +430,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.bottom = `${bottom + 10}px`;
         egg.style.zIndex = '2';
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'kraken');
             egg.remove();
             krakenEggFound = true;
             addEggToCollection('kraken', 'images/krakenegg.png', 'Kraken Egg');
-            alert('You found the kraken egg!');
         });
 
         gameArea.appendChild(egg);
@@ -396,10 +487,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const planet = gameArea.querySelector('.planet');
 
         if (!planet) {
+            emitScreenParticlesAtElement(asteroidEgg, 'asteroid');
             asteroidEgg.remove();
             asteroidEggFound = true;
             addEggToCollection('asteroid', 'images/asteroidegg.png', 'Asteroid Egg');
-            alert('You found the asteroid egg!');
             return;
         }
 
@@ -436,10 +527,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 560);
 
         setTimeout(() => {
+            emitScreenParticlesAtElement(asteroidEgg, 'asteroid');
             asteroidEgg.remove();
             asteroidEggFound = true;
             addEggToCollection('asteroid', 'images/asteroidegg.png', 'Asteroid Egg');
-            alert('You found the asteroid egg!');
         }, 750);
     }
 
@@ -454,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
         stopAsteroidEggCycle();
         stopBlackHoleAttraction();
         stopIceEggCycle();
-        const decorations = gameArea.querySelectorAll('.egg, .flower, .tree, .star, .cloud, .rain-egg, .snow-egg, .bubble, .bubble-egg, .fish-egg, .ship, .tentacle, .ink-splotch, .egg-swing, .asteroid-egg, .planet, .planet-explosion');
+        const decorations = gameArea.querySelectorAll('.egg, .flower, .tree, .star, .cloud, .rain-egg, .snow-egg, .bubble, .bubble-egg, .fish-egg, .ship, .tentacle, .ink-splotch, .egg-swing, .asteroid-egg, .planet, .planet-explosion, .screen-particle');
         decorations.forEach(d => d.remove());
     }
 
@@ -471,10 +562,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.position = 'absolute';
         egg.style.cursor = 'pointer';
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'floral');
             egg.style.display = 'none';
             eggFound = true; // mark as found
             addEggToCollection('floral', 'images/floralegg.png', 'Floral Egg');
-            alert('You found the floral egg!');
         });
         gameArea.appendChild(egg);
     }
@@ -492,10 +583,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.position = 'absolute';
         egg.style.cursor = 'pointer';
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'small');
             egg.style.display = 'none';
             smallEggFound = true;
             addEggToCollection('small', 'images/smallegg.png', 'Small Egg');
-            alert('You found the small egg!');
         });
         gameArea.appendChild(egg);
     }
@@ -514,10 +605,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.top = '450px';
         egg.style.zIndex = '3';
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'wood');
             egg.style.display = 'none';
             woodEggFound = true;
             addEggToCollection('wood', 'images/woodegg.png', 'Wood Egg');
-            alert('You found the wood egg!');
         });
         gameArea.appendChild(egg);
     }
@@ -536,10 +627,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.top = '305px';
         egg.style.zIndex = '3';
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'maple');
             egg.style.display = 'none';
             mapleEggFound = true;
             addEggToCollection('maple', 'images/maplegg.png', 'Maple Egg');
-            alert('You found the maple egg!');
         });
         gameArea.appendChild(egg);
     }
@@ -558,6 +649,7 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.top = '80px';
         egg.style.zIndex = '1';
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'cloud');
             egg.style.display = 'none';
             cloudEggFound = true;
             addEggToCollection('cloud', 'images/cloudegg.png', 'Cloud Egg');
@@ -567,7 +659,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 cloud.classList.add('cloud-interactive');
                 cloud.addEventListener('click', startRainEggCycle);
             }
-            alert('You found the cloud egg!');
         });
         gameArea.appendChild(egg);
     }
@@ -587,10 +678,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.top = '540px';
         egg.style.zIndex = '2';
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'coral');
             egg.style.display = 'none';
             coralEggFound = true;
             addEggToCollection('coral', 'images/coralegg.png', 'Coral Egg');
-            alert('You found the coral egg!');
         });
         gameArea.appendChild(egg);
     }
@@ -613,10 +704,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.top = '540px';
         egg.style.zIndex = '2';
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'sunken');
             egg.style.display = 'none';
             sunkenEggFound = true;
             addEggToCollection('sunken', 'images/sunkenegg.png', 'Sunken Egg');
-            alert('You found the sunken egg!');
         });
 
         gameArea.appendChild(egg);
@@ -642,10 +733,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.top = `${top}px`;
         egg.style.zIndex = '2';
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'trash');
             egg.style.display = 'none';
             trashEggFound = true;
             addEggToCollection('trash', 'images/trashegg.png', 'Trash Egg');
-            alert('You found the trash egg!');
         });
 
         gameArea.appendChild(egg);
@@ -673,10 +764,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.zIndex = '2';
         egg.addEventListener('click', () => {
             stopIceEggCycle();
+            emitScreenParticlesAtElement(egg, 'ice');
             egg.style.display = 'none';
             iceEggFound = true;
             addEggToCollection('ice', 'images/iceegg.png', 'Ice Egg');
-            alert('You found the ice egg!');
         });
 
         gameArea.appendChild(egg);
@@ -723,10 +814,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.top = `${top}px`;
         egg.style.zIndex = '2';
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'death');
             egg.style.display = 'none';
             deathEggFound = true;
             addEggToCollection('death', 'images/deathegg.png', 'Death Egg');
-            alert('You found the death egg!');
         });
 
         gameArea.appendChild(egg);
@@ -752,10 +843,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.top = `${top}px`;
         egg.style.zIndex = '2';
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'sun');
             egg.style.display = 'none';
             sunEggFound = true;
             addEggToCollection('sun', 'images/sunegg.png', 'Sun Egg');
-            alert('You found the sun egg!');
         });
 
         gameArea.appendChild(egg);
@@ -781,11 +872,11 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.top = `${top}px`;
         egg.style.zIndex = '2';
         egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'black-hole');
             egg.remove();
             blackHoleEggFound = true;
             addEggToCollection('black-hole', 'images/blackholeegg.png', 'Black Hole Egg');
             stopBlackHoleAttraction();
-            alert('You found the black hole egg!');
         });
 
         gameArea.appendChild(egg);
@@ -874,6 +965,7 @@ document.addEventListener('DOMContentLoaded', function() {
         rainEgg.addEventListener('click', () => {
             rainEggFound = true;
             stopRainEggCycle();
+            emitScreenParticlesAtElement(rainEgg, 'rain');
             rainEgg.remove();
             addEggToCollection('rain', 'images/rainegg.png', 'Rain Egg');
             const cloud = gameArea.querySelector('.cloud');
@@ -884,7 +976,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 cloud.addEventListener('click', startSnowEggCycle);
             }
             startSnowEggCycle();
-            alert('You found the rain egg!');
         });
         gameArea.appendChild(rainEgg);
 
@@ -929,9 +1020,9 @@ document.addEventListener('DOMContentLoaded', function() {
         snowEgg.addEventListener('click', () => {
             snowEggFound = true;
             stopSnowEggCycle();
+            emitScreenParticlesAtElement(snowEgg, 'snow');
             snowEgg.remove();
             addEggToCollection('snow', 'images/snowegg.png', 'Snow Egg');
-            alert('You found the snow egg!');
         });
         gameArea.appendChild(snowEgg);
 
@@ -1113,9 +1204,9 @@ document.addEventListener('DOMContentLoaded', function() {
             eggSwing.addEventListener('click', () => {
                 eggSwingFound = true;
                 stopEggSwingCycle();
+                emitScreenParticlesAtElement(eggSwing, 'eggswing');
                 eggSwing.remove();
                 addEggToCollection('eggswing', 'images/eggswing.png', 'Eggswing');
-                alert('You found the eggswing!');
             });
 
             eggSwing.addEventListener('animationend', () => {
@@ -1238,9 +1329,9 @@ document.addEventListener('DOMContentLoaded', function() {
             bubbleEgg.addEventListener('click', () => {
                 bubbleEggFound = true;
                 stopBubbleEggCycle();
+                emitScreenParticlesAtElement(bubbleEgg, 'bubble');
                 bubbleEgg.remove();
                 addEggToCollection('bubble', 'images/bubbleegg.png', 'Bubble Egg');
-                alert('You found the bubble egg!');
             });
 
             bubbleEgg.addEventListener('animationend', () => {
@@ -1282,9 +1373,9 @@ document.addEventListener('DOMContentLoaded', function() {
             fishEgg.addEventListener('click', () => {
                 fishEggFound = true;
                 stopFishEggCycle();
+                emitScreenParticlesAtElement(fishEgg, 'fish');
                 fishEgg.remove();
                 addEggToCollection('fish', 'images/flowers/fishegg.png', 'Fish Egg');
-                alert('You found the fish egg!');
             });
 
             fishEgg.addEventListener('animationend', () => {
