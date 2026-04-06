@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Egg Hunt</title>
+        <link rel="icon" type="image/png" sizes="32x32" href="images/smallegg.png">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet"
+        >
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>Egg Hunt Game</h1>
+        <p>Find all the hidden eggs! Click on them to collect.</p>
+        <div id="game-container">
+            <button id="left-arrow">&larr;</button>
+            <div id="game-area"></div>
+            <button id="right-arrow">&rarr;</button>
+        </div>
+        <div id="score">Eggs found: <span id="count">0</span> / <span id="total">20</span></div>
+        <div id="collection">
+            <div class="collection-slot" data-egg="floral" data-description="A flower-covered egg hidden low in the field.">
+                <span class="slot-label">Floral Egg</span>
+                <span class="slot-description">A flower-covered egg hidden low in the field.</span>
+            </div>
+            <div class="collection-slot" data-egg="wood" data-description="A bark-colored egg tucked into the canadatree.">
+                <span class="slot-label">Wood Egg</span>
+                <span class="slot-description">A bark-colored egg tucked into the canadatree.</span>
+            </div>
+            <div class="collection-slot" data-egg="maple" data-description="A maple... How is this classified as an egg?">
+                <span class="slot-label">Maple Egg</span>
+                <span class="slot-description">A maple... How is this classified as an egg?</span>
+            </div>
+            <div class="collection-slot" data-egg="cloud" data-description="A soft cloud egg floating high in the sky.">
+                <span class="slot-label">Cloud Egg</span>
+                <span class="slot-description">A soft cloud egg floating high in the sky.</span>
+            </div>
+            <div class="collection-slot" data-egg="rain" data-description="A stormy egg dropped from the darkened cloud.">
+                <span class="slot-label">Rain Egg</span>
+                <span class="slot-description">A stormy egg dropped from the darkened cloud.</span>
+            </div>
+            <div class="collection-slot" data-egg="snow" data-description="A chilled egg drifting down from the bright cloud.">
+                <span class="slot-label">Snow Egg</span>
+                <span class="slot-description">A chilled egg drifting down from the bright cloud.</span>
+            </div>
+            <div class="collection-slot" data-egg="bubble" data-description="A buoyant egg floating up through the underwater bubbles.">
+                <span class="slot-label">Bubble Egg</span>
+                <span class="slot-description">A buoyant egg floating up through the underwater bubbles.</span>
+            </div>
+            <div class="collection-slot" data-egg="fish" data-description="A fish-like egg that swims across the underwater scene.">
+                <span class="slot-label">Fish Egg</span>
+                <span class="slot-description">A fish-like egg that swims across the underwater scene.</span>
+            </div>
+            <div class="collection-slot" data-egg="coral" data-description="A coral-colored egg resting on the ocean floor.">
+                <span class="slot-label">Coral Egg</span>
+                <span class="slot-description">A coral-colored egg resting on the ocean floor.</span>
+            </div>
+            <div class="collection-slot" data-egg="sunken" data-description="A dim egg rising slowly from the deep water.">
+                <span class="slot-label">Sunken Egg</span>
+                <span class="slot-description">A dim egg rising slowly from the deep water.</span>
+            </div>
+            <div class="collection-slot" data-egg="trash" data-description="A discarded egg drifting around the underwater scene.">
+                <span class="slot-label">Trash Egg</span>
+                <span class="slot-description">A discarded egg drifting around the underwater scene.</span>
+            </div>
+            <div class="collection-slot" data-egg="ice" data-description="A chilly egg bobbing near the top of the ocean scene.">
+                <span class="slot-label">Ice Egg</span>
+                <span class="slot-description">A chilly egg bobbing near the top of the ocean scene.</span>
+            </div>
+            <div class="collection-slot" data-egg="kraken" data-description="A shadowy egg revealed by the kraken's ink.">
+                <span class="slot-label">Kraken Egg</span>
+                <span class="slot-description">A shadowy egg revealed by the kraken's ink.</span>
+            </div>
+            <div class="collection-slot" data-egg="eggswing" data-description="A fast-moving egg that streaks across space.">
+                <span class="slot-label">Eggswing</span>
+                <span class="slot-description">A fast-moving egg that streaks across space.</span>
+            </div>
+            <div class="collection-slot" data-egg="death" data-description="An aritifical destroyer of worlds that destroys worlds.">
+                <span class="slot-label">Death Egg</span>
+                <span class="slot-description">An aritifical destroyer of worlds that destroys worlds.</span>
+            </div>
+            <div class="collection-slot" data-egg="sun" data-description="A radiant egg glowing like a tiny sun in the space scene.">
+                <span class="slot-label">Sun Egg</span>
+                <span class="slot-description">A radiant egg glowing like a tiny sun in the space scene.</span>
+            </div>
+            <div class="collection-slot" data-egg="black-hole" data-description="A strange egg with a void-dark pull somewhere in the space scene.">
+                <span class="slot-label">Black Hole Egg</span>
+                <span class="slot-description">A strange egg with a void-dark pull somewhere in the space scene.</span>
+            </div>
+            <div class="collection-slot" data-egg="asteroid" data-description="A rocky egg burning slowly through the void with a smoky trail.">
+                <span class="slot-label">Asteroid Egg</span>
+                <span class="slot-description">A rocky egg burning slowly through the void with a smoky trail.</span>
+            </div>
+            <div class="collection-slot" data-egg="pixel" data-description="A blocky egg revealed when the planet is shattered by the asteroid.">
+                <span class="slot-label">Pixel Egg</span>
+                <span class="slot-description">A blocky egg revealed when the cube planet is shattered by the asteroid.</span>
+            </div>
+            <div class="collection-slot" data-egg="coming-soon" data-description="A mystery egg that has not been added to the hunt yet.">
+                <span class="slot-label">Coming Soon</span>
+                <span class="slot-description">A mystery egg that has not been added to the hunt yet.</span>
+            </div>
+        </div>
+        <script src="index.js"></script>
+    </body>
+</html>
