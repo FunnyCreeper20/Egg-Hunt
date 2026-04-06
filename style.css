@@ -193,6 +193,19 @@ p {
     animation: pixel-egg-appear 0.45s steps(4) forwards;
 }
 
+.galaxy-egg {
+    animation: galaxy-egg-appear 0.48s ease-out forwards;
+}
+
+.galaxy-egg-core {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: galaxy-egg-spin 3.8s linear infinite;
+}
+
 .tentacle {
     position: absolute;
     width: 110px;
@@ -523,6 +536,33 @@ p {
     100% {
         transform: scale(1);
         opacity: 1;
+    }
+}
+
+@keyframes galaxy-egg-appear {
+    0% {
+        transform: scale(0.2);
+        opacity: 0;
+    }
+
+    65% {
+        transform: scale(1.18);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes galaxy-egg-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
     }
 }
 
