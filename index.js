@@ -43,6 +43,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let snowEggFrameId = null;
     let bubbleIntervalId = null;
     let bubbleEggIntervalId = null;
+    let bubbleSpawnTimeoutIds = [];
+    let bubbleEggSpawnTimeoutId = null;
     let fishEggIntervalId = null;
     let tentacleCheckIntervalId = null;
     let tentacleRetryTimeoutId = null;
@@ -77,12 +79,20 @@ document.addEventListener('DOMContentLoaded', function() {
             clearInterval(bubbleIntervalId);
             bubbleIntervalId = null;
         }
+        bubbleSpawnTimeoutIds.forEach(timeoutId => {
+            clearTimeout(timeoutId);
+        });
+        bubbleSpawnTimeoutIds = [];
     }
 
     function stopBubbleEggCycle() {
         if (bubbleEggIntervalId !== null) {
             clearInterval(bubbleEggIntervalId);
             bubbleEggIntervalId = null;
+        }
+        if (bubbleEggSpawnTimeoutId !== null) {
+            clearTimeout(bubbleEggSpawnTimeoutId);
+            bubbleEggSpawnTimeoutId = null;
         }
     }
 
@@ -1499,7 +1509,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         for (let i = 0; i < 6; i += 1) {
-            setTimeout(spawnBubble, i * 220);
+            const timeoutId = setTimeout(spawnBubble, i * 220);
+            bubbleSpawnTimeoutIds.push(timeoutId);
         }
 
         bubbleIntervalId = setInterval(() => {
@@ -1544,7 +1555,10 @@ document.addEventListener('DOMContentLoaded', function() {
             gameArea.appendChild(bubbleEgg);
         }
 
-        setTimeout(spawnBubbleEgg, 1200);
+        bubbleEggSpawnTimeoutId = setTimeout(() => {
+            bubbleEggSpawnTimeoutId = null;
+            spawnBubbleEgg();
+        }, 1200);
         bubbleEggIntervalId = setInterval(() => {
             spawnBubbleEgg();
         }, 5200);
