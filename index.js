@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let currentBg = 0; //0 is field, 1 is ocean, 2 is space
     let eggFound = false; // track if the floral egg has been found
+    let smallEggFound = false; // track if the small egg has been found
     let woodEggFound = false; // track if the wood egg has been found
     let mapleEggFound = false; // track if the maple egg has been found
     let cloudEggFound = false; // track if the cloud egg has been found
@@ -474,6 +475,27 @@ document.addEventListener('DOMContentLoaded', function() {
             eggFound = true; // mark as found
             addEggToCollection('floral', 'images/floralegg.png', 'Floral Egg');
             alert('You found the floral egg!');
+        });
+        gameArea.appendChild(egg);
+    }
+
+    function addSmallEgg() {
+        if (smallEggFound) return;
+        const egg = document.createElement('div');
+        egg.className = 'egg';
+        egg.style.backgroundImage = 'url(images/smallegg.png)';
+        egg.style.backgroundSize = 'cover';
+        egg.style.left = Math.random() * (800 - 48) + 'px';
+        egg.style.top = '555px';
+        egg.style.width = '48px';
+        egg.style.height = '60px';
+        egg.style.position = 'absolute';
+        egg.style.cursor = 'pointer';
+        egg.addEventListener('click', () => {
+            egg.style.display = 'none';
+            smallEggFound = true;
+            addEggToCollection('small', 'images/smallegg.png', 'Small Egg');
+            alert('You found the small egg!');
         });
         gameArea.appendChild(egg);
     }
@@ -1286,6 +1308,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addMapleEgg();
         addWoodEgg();
         addGreenEgg();
+        addSmallEgg();
         addFlowers();
     } else if (currentBg === 1) {
         addCoralDecorations();
@@ -1334,6 +1357,7 @@ document.addEventListener('DOMContentLoaded', function() {
             addMapleEgg();
             addWoodEgg();
             addGreenEgg();
+            addSmallEgg();
             addFlowers();
         } else if (currentBg === 1) {
             addCoralDecorations();
@@ -1368,6 +1392,7 @@ document.addEventListener('DOMContentLoaded', function() {
             addMapleEgg();
             addWoodEgg();
             addGreenEgg();
+            addSmallEgg();
             addFlowers();
         } else if (currentBg === 1) {
             addCoralDecorations();
