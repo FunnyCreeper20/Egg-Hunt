@@ -712,6 +712,26 @@ p {
     background: rgba(255,255,255,0.35);
 }
 
+.collection-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.95;
+    z-index: 6;
+    box-shadow: 0 0 8px currentColor;
+    animation: collection-particle-burst 0.7s ease-out forwards;
+}
+
+.screen-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.95;
+    z-index: 7;
+    box-shadow: 0 0 10px currentColor;
+    animation: collection-particle-burst 0.7s ease-out forwards;
+}
+
 .collection-slot.filled {
     border-style: solid;
     background: linear-gradient(135deg, #fff8ef 0%, #ffd7b5 100%);
@@ -800,4 +820,20 @@ p {
 .collection-slot.filled:hover .slot-description {
     opacity: 1;
     transform: translateY(0);
+}
+
+@keyframes collection-particle-burst {
+    0% {
+        transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(0.6);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) translate(var(--particle-x), var(--particle-y)) rotate(var(--particle-rotate)) scale(0.15);
+        opacity: 0;
+    }
 }
