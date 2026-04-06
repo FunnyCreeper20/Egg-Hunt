@@ -22,6 +22,28 @@ p {
     margin-bottom: 30px;
 }
 
+.intro-egg {
+    display: inline-block;
+    color: #ffbf3c;
+    text-shadow: 0 0 10px rgba(255, 215, 106, 0.55), 0 0 18px rgba(255, 240, 168, 0.35);
+    transform: translateY(-1px);
+    cursor: pointer;
+    transition: transform 0.2s ease, text-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.intro-egg:hover,
+.intro-egg:focus-visible {
+    transform: translateY(-2px) scale(1.08);
+    text-shadow: 0 0 14px rgba(255, 215, 106, 0.7), 0 0 24px rgba(255, 240, 168, 0.45);
+    outline: none;
+}
+
+.intro-egg-found {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+}
+
 #game-container {
     display: flex;
     align-items: center;
@@ -683,6 +705,13 @@ p {
     box-shadow: 0 4px 15px rgba(86, 148, 196, 0.2);
 }
 
+.collection-slot[data-egg="intro"],
+.collection-slot[data-egg="coming-soon"] {
+    background: linear-gradient(135deg, #fff2c4 0%, #ffd77a 100%);
+    border-color: #dfac41;
+    box-shadow: 0 4px 15px rgba(214, 165, 60, 0.22);
+}
+
 .collection-slot[data-egg="eggswing"],
 .collection-slot[data-egg="death"],
 .collection-slot[data-egg="sun"],
@@ -757,6 +786,11 @@ p {
     background: linear-gradient(135deg, #edf8ff 0%, #c7e6f7 100%);
 }
 
+.collection-slot.filled[data-egg="intro"],
+.collection-slot.filled[data-egg="coming-soon"] {
+    background: linear-gradient(135deg, #fff7d9 0%, #ffe39a 100%);
+}
+
 .collection-slot.filled[data-egg="eggswing"],
 .collection-slot.filled[data-egg="death"],
 .collection-slot.filled[data-egg="sun"],
@@ -790,6 +824,12 @@ p {
     height: 68px;
     object-fit: contain;
     margin-top: 6px;
+}
+
+.collection-emoji {
+    font-size: 3rem;
+    line-height: 1;
+    margin-top: 8px;
 }
 
 .slot-label {
