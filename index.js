@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let blackHoleEggFound = false; // track if the black hole egg has been found
     let asteroidEggFound = false; // track if the asteroid egg has been found
     let pixelEggFound = false; // track if the pixel egg has been found
+    let galaxyEggFound = false; // track if the galaxy egg has been found
     let comingSoonEggFound = false; // track if the preview egg has been revealed
     let planetDestroyed = false; // track if the space planet has been destroyed
     let confettiLaunched = false;
@@ -192,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function getCollectionParticlePalette(eggType) {
         const greenEggs = ['small', 'floral', 'cloud', 'rain', 'wood', 'maple', 'snow'];
         const blueEggs = ['bubble', 'fish', 'coral', 'sunken', 'trash', 'ice', 'kraken'];
-        const darkEggs = ['eggswing', 'death', 'sun', 'black-hole', 'asteroid', 'pixel'];
+        const darkEggs = ['eggswing', 'death', 'sun', 'black-hole', 'asteroid', 'pixel', 'galaxy'];
 
         if (eggType === 'intro') {
             return ['#ffd76a', '#ffbf3c', '#fff0a8'];
@@ -581,6 +582,35 @@ document.addEventListener('DOMContentLoaded', function() {
             egg.remove();
             pixelEggFound = true;
             addEggToCollection('pixel', 'images/pixelegg.png', 'Pixel Egg');
+        });
+
+        gameArea.appendChild(egg);
+    }
+
+    function spawnGalaxyEggAt(left, top) {
+        if (galaxyEggFound || gameArea.querySelector('.galaxy-egg')) {
+            return;
+        }
+
+        const egg = document.createElement('div');
+        const width = 54;
+        const height = 68;
+
+        egg.className = 'egg galaxy-egg';
+        egg.style.backgroundImage = 'url(images/galaxyegg.png)';
+        egg.style.backgroundSize = 'cover';
+        egg.style.width = `${width}px`;
+        egg.style.height = `${height}px`;
+        egg.style.position = 'absolute';
+        egg.style.cursor = 'pointer';
+        egg.style.left = `${Math.max(0, Math.min(800 - width, left - width / 2))}px`;
+        egg.style.top = `${Math.max(0, Math.min(600 - height, top - height / 2))}px`;
+        egg.style.zIndex = '3';
+        egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'galaxy');
+            egg.remove();
+            galaxyEggFound = true;
+            addEggToCollection('galaxy', 'images/galaxyegg.png', 'Galaxy Egg');
         });
 
         gameArea.appendChild(egg);
@@ -1356,6 +1386,11 @@ document.addEventListener('DOMContentLoaded', function() {
             star.style.opacity = (0.45 + Math.random() * 0.55).toFixed(2);
             star.style.animationDuration = `${1.2 + Math.random() * 2.4}s`;
             star.style.animationDelay = `${Math.random() * 2.5}s`;
+            star.addEventListener('click', () => {
+                const starLeft = parseFloat(star.style.left) || 0;
+                const starTop = parseFloat(star.style.top) || 0;
+                spawnGalaxyEggAt(starLeft, starTop);
+            });
 
             gameArea.appendChild(star);
         }
@@ -1387,7 +1422,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function spawnEggSwing() {
-            if (currentBg !== 2 || eggSwingFound) {
+            if (currentBg !== 2 || eggSwingFound || gameArea.querySelector('.egg-swing')) {
                 return;
             }
 
@@ -1491,6 +1526,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function addBubbles() {
         function spawnBubble() {
+            if (document.hidden || currentBg !== 1) {
+                return;
+            }
+
             const bubble = document.createElement('div');
             const size = 10 + Math.random() * 22;
 
@@ -1524,7 +1563,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function spawnBubbleEgg() {
-            if (currentBg !== 1 || bubbleEggFound) {
+            if (document.hidden || currentBg !== 1 || bubbleEggFound || gameArea.querySelector('.bubble-egg')) {
                 return;
             }
 
