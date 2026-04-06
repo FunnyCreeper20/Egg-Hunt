@@ -659,6 +659,41 @@ p {
     transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
+.collection-slot[data-egg="small"],
+.collection-slot[data-egg="floral"],
+.collection-slot[data-egg="cloud"],
+.collection-slot[data-egg="rain"],
+.collection-slot[data-egg="wood"],
+.collection-slot[data-egg="maple"],
+.collection-slot[data-egg="snow"] {
+    background: linear-gradient(135deg, #eef9df 0%, #cfeab8 100%);
+    border-color: #8eb96b;
+    box-shadow: 0 4px 15px rgba(122, 170, 93, 0.2);
+}
+
+.collection-slot[data-egg="bubble"],
+.collection-slot[data-egg="fish"],
+.collection-slot[data-egg="coral"],
+.collection-slot[data-egg="sunken"],
+.collection-slot[data-egg="trash"],
+.collection-slot[data-egg="ice"],
+.collection-slot[data-egg="kraken"] {
+    background: linear-gradient(135deg, #e4f4ff 0%, #b8dcf4 100%);
+    border-color: #6fa9d0;
+    box-shadow: 0 4px 15px rgba(86, 148, 196, 0.2);
+}
+
+.collection-slot[data-egg="eggswing"],
+.collection-slot[data-egg="death"],
+.collection-slot[data-egg="sun"],
+.collection-slot[data-egg="black-hole"],
+.collection-slot[data-egg="asteroid"],
+.collection-slot[data-egg="pixel"] {
+    background: linear-gradient(135deg, #3d3f46 0%, #707aa0 100%);
+    border-color: #7d88b2;
+    box-shadow: 0 4px 15px rgba(54, 62, 96, 0.26);
+}
+
 .collection-preview {
     cursor: pointer;
 }
@@ -680,6 +715,50 @@ p {
 .collection-slot.filled {
     border-style: solid;
     background: linear-gradient(135deg, #fff8ef 0%, #ffd7b5 100%);
+}
+
+.collection-slot.filled[data-egg="small"],
+.collection-slot.filled[data-egg="floral"],
+.collection-slot.filled[data-egg="cloud"],
+.collection-slot.filled[data-egg="rain"],
+.collection-slot.filled[data-egg="wood"],
+.collection-slot.filled[data-egg="maple"],
+.collection-slot.filled[data-egg="snow"] {
+    background: linear-gradient(135deg, #f4fbe9 0%, #d9efbf 100%);
+}
+
+.collection-slot.filled[data-egg="bubble"],
+.collection-slot.filled[data-egg="fish"],
+.collection-slot.filled[data-egg="coral"],
+.collection-slot.filled[data-egg="sunken"],
+.collection-slot.filled[data-egg="trash"],
+.collection-slot.filled[data-egg="ice"],
+.collection-slot.filled[data-egg="kraken"] {
+    background: linear-gradient(135deg, #edf8ff 0%, #c7e6f7 100%);
+}
+
+.collection-slot.filled[data-egg="eggswing"],
+.collection-slot.filled[data-egg="death"],
+.collection-slot.filled[data-egg="sun"],
+.collection-slot.filled[data-egg="black-hole"],
+.collection-slot.filled[data-egg="asteroid"],
+.collection-slot.filled[data-egg="pixel"] {
+    background: linear-gradient(135deg, #3d3f46 0%, #7d89b2 100%);
+}
+
+.collection-slot[data-egg="eggswing"] .slot-label,
+.collection-slot[data-egg="death"] .slot-label,
+.collection-slot[data-egg="sun"] .slot-label,
+.collection-slot[data-egg="black-hole"] .slot-label,
+.collection-slot[data-egg="asteroid"] .slot-label,
+.collection-slot[data-egg="pixel"] .slot-label,
+.collection-slot[data-egg="eggswing"] .slot-description,
+.collection-slot[data-egg="death"] .slot-description,
+.collection-slot[data-egg="sun"] .slot-description,
+.collection-slot[data-egg="black-hole"] .slot-description,
+.collection-slot[data-egg="asteroid"] .slot-description,
+.collection-slot[data-egg="pixel"] .slot-description {
+    color: #ffffff;
 }
 
 .collection-slot.filled::before {
