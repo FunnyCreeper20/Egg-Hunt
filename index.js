@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let eggSwingIntervalId = null;
     let asteroidEggIntervalId = null;
     let blackHoleAttractionIntervalId = null;
+    let iceEggIntervalId = null;
     gameArea.style.background = backgrounds[currentBg];
 
     function stopRainEggCycle() {
@@ -113,6 +114,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (blackHoleAttractionIntervalId !== null) {
             clearInterval(blackHoleAttractionIntervalId);
             blackHoleAttractionIntervalId = null;
+        }
+    }
+
+    function stopIceEggCycle() {
+        if (iceEggIntervalId !== null) {
+            clearInterval(iceEggIntervalId);
+            iceEggIntervalId = null;
         }
     }
 
@@ -444,6 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
         stopEggSwingCycle();
         stopAsteroidEggCycle();
         stopBlackHoleAttraction();
+        stopIceEggCycle();
         const decorations = gameArea.querySelectorAll('.egg, .flower, .tree, .star, .cloud, .rain-egg, .snow-egg, .bubble, .bubble-egg, .fish-egg, .ship, .tentacle, .ink-splotch, .egg-swing, .asteroid-egg, .planet, .planet-explosion');
         decorations.forEach(d => d.remove());
     }
@@ -626,8 +635,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const egg = document.createElement('div');
         const width = 52;
         const height = 66;
-        const left = 80 + Math.random() * 620;
-        const top = 30 + Math.random() * 55;
+        let left = Math.random() * (800 - width);
+        let velocityX = Math.random() < 0.5 ? 1.6 : -1.6;
+        let bobPhase = Math.random() * Math.PI * 2;
 
         egg.className = 'egg ice-egg';
         egg.style.backgroundImage = 'url(images/iceegg.png)';
@@ -637,9 +647,10 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.position = 'absolute';
         egg.style.cursor = 'pointer';
         egg.style.left = `${left}px`;
-        egg.style.top = `${top}px`;
+        egg.style.top = '0px';
         egg.style.zIndex = '2';
         egg.addEventListener('click', () => {
+            stopIceEggCycle();
             egg.style.display = 'none';
             iceEggFound = true;
             addEggToCollection('ice', 'images/iceegg.png', 'Ice Egg');
@@ -647,6 +658,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         gameArea.appendChild(egg);
+
+        iceEggIntervalId = setInterval(() => {
+            if (currentBg !== 1 || iceEggFound || !egg.isConnected) {
+                stopIceEggCycle();
+                return;
+            }
+
+            left += velocityX;
+            bobPhase += 0.06;
+
+            if (left <= 0) {
+                left = 0;
+                velocityX = Math.abs(velocityX);
+            } else if (left >= 800 - width) {
+                left = 800 - width;
+                velocityX = -Math.abs(velocityX);
+            }
+
+            egg.style.left = `${left}px`;
+            egg.style.top = `${((Math.sin(bobPhase) + 1) / 2) * 8}px`;
+            egg.style.transform = `rotate(${Math.sin(bobPhase * 0.85) * 6}deg)`;
+        }, 16);
     }
 
     function addDeathEgg() {
