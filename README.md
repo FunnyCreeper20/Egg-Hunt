@@ -18,3 +18,4 @@ WHATS TO COME:
 * Mountain - done
 * Mountain Egg - NEEDS TO BE FIXED I DID THIS WRONG BUT I'M TOO TIRED TO CARE RIGHT NOW
 * Yeti Egg - done
+* Get rid of secret dev key
