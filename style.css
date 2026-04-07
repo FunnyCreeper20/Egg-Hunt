@@ -165,6 +165,123 @@ p {
     opacity: 0.88;
 }
 
+.mountain {
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.96;
+}
+
+.ice-ground {
+    position: absolute;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.ice-present {
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.ice-present.ice-present-interactive {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.frost-flake {
+    position: absolute;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.98), rgba(232, 247, 255, 0.92) 58%, rgba(205, 234, 255, 0.35) 78%, rgba(205, 234, 255, 0));
+    box-shadow: 0 0 10px rgba(220, 244, 255, 0.55);
+    pointer-events: none;
+    z-index: 2;
+    animation: frost-fall linear infinite;
+}
+
+.penguin-egg {
+    position: absolute;
+    cursor: pointer;
+    animation: penguin-egg-hop 2.2s ease-in-out forwards;
+    transform-origin: center bottom;
+}
+
+.penguin-splash {
+    position: absolute;
+    width: 104px;
+    height: 42px;
+    pointer-events: none;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 50% 76%, rgba(245, 252, 255, 0.98), rgba(190, 233, 255, 0.95) 32%, rgba(112, 197, 242, 0.78) 58%, rgba(112, 197, 242, 0) 82%);
+    filter: drop-shadow(0 0 14px rgba(222, 246, 255, 0.9));
+    animation: penguin-splash-burst 0.72s ease-out forwards;
+}
+
+.elf-egg-left {
+    animation: elf-egg-walk-right 7.2s linear forwards;
+}
+
+.elf-egg-right {
+    animation: elf-egg-walk-left 7.2s linear forwards;
+    transform: scaleX(-1);
+}
+
+.elf-footprint {
+    position: absolute;
+    width: 12px;
+    height: 22px;
+    border-radius: 50% 50% 45% 45%;
+    background: rgba(128, 164, 178, 0.38);
+    box-shadow:
+        0 0 0 2px rgba(245, 252, 255, 0.18) inset,
+        0 0 10px rgba(173, 210, 224, 0.12);
+    pointer-events: none;
+    z-index: 2;
+    animation: elf-footprint-fade 2.4s ease-out forwards;
+}
+
+.icicle-egg {
+    animation: icicle-egg-fall 2.35s linear forwards;
+    transform-origin: center top;
+}
+
+.icicle-shard {
+    border-radius: 2px;
+    opacity: 0.95;
+    box-shadow:
+        0 0 8px rgba(223, 245, 255, 0.55),
+        0 0 0 1px rgba(255, 255, 255, 0.35) inset;
+}
+
+.polar-egg {
+    animation: polar-egg-trip 4.4s ease-in-out forwards;
+}
+
+.yeti-egg {
+    transition: transform 0.42s ease, opacity 0.42s ease;
+}
+
+.yeti-egg.yeti-egg-hidden {
+    transform: translateY(34px);
+    opacity: 0;
+}
+
+.yeti-egg.yeti-egg-visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
 .planet {
     position: absolute;
     background-size: contain;
@@ -625,6 +742,202 @@ p {
     }
 }
 
+@keyframes frost-fall {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(0.72);
+        opacity: 0;
+    }
+
+    12% {
+        opacity: 0.92;
+    }
+
+    100% {
+        transform: translate(var(--flake-drift), 700px) rotate(var(--flake-spin)) scale(1.06);
+        opacity: 0.15;
+    }
+}
+
+@keyframes penguin-egg-hop {
+    0% {
+        transform: translateY(0) scale(0.92);
+    }
+
+    18% {
+        transform: translateY(-108px) scale(1.03) rotate(-5deg);
+    }
+
+    50% {
+        transform: translateY(-122px) scale(1.04) rotate(4deg);
+    }
+
+    80% {
+        transform: translateY(-108px) scale(1) rotate(-3deg);
+    }
+
+    100% {
+        transform: translateY(0) scale(0.92);
+    }
+}
+
+@keyframes penguin-splash-burst {
+    0% {
+        transform: scale(0.22);
+        opacity: 0;
+    }
+
+    22% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.45) translateY(-16px);
+        opacity: 0;
+    }
+}
+
+@keyframes elf-egg-walk-right {
+    0% {
+        translate: 0 0;
+    }
+
+    12.5% {
+        translate: 111px -14px;
+    }
+
+    25% {
+        translate: 223px -26px;
+    }
+
+    37.5% {
+        translate: 334px -14px;
+    }
+
+    50% {
+        translate: 445px 0;
+    }
+
+    62.5% {
+        translate: 556px 14px;
+    }
+
+    75% {
+        translate: 668px 26px;
+    }
+
+    87.5% {
+        translate: 779px 14px;
+    }
+
+    100% {
+        translate: 890px 0;
+    }
+}
+
+@keyframes elf-egg-walk-left {
+    0% {
+        translate: 0 0;
+    }
+
+    12.5% {
+        translate: -111px -14px;
+    }
+
+    25% {
+        translate: -223px -26px;
+    }
+
+    37.5% {
+        translate: -334px -14px;
+    }
+
+    50% {
+        translate: -445px 0;
+    }
+
+    62.5% {
+        translate: -556px 14px;
+    }
+
+    75% {
+        translate: -668px 26px;
+    }
+
+    87.5% {
+        translate: -779px 14px;
+    }
+
+    100% {
+        translate: -890px 0;
+    }
+}
+
+@keyframes elf-footprint-fade {
+    0% {
+        opacity: 0;
+    }
+
+    18% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes icicle-egg-fall {
+    0% {
+        transform: translateY(0) rotate(180deg);
+    }
+
+    50% {
+        transform: translateY(315px) rotate(183deg);
+    }
+
+    100% {
+        transform: translateY(610px) rotate(173deg);
+    }
+}
+
+@keyframes polar-egg-trip {
+    0% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+
+    12% {
+        transform: translate(calc(var(--polar-dx) * 0.35), calc(var(--polar-dy) * 0.35));
+        opacity: 1;
+    }
+
+    30% {
+        transform: translate(calc(var(--polar-dx) * 0.85), calc(var(--polar-dy) * 0.85));
+        opacity: 1;
+    }
+
+    45% {
+        transform: translate(var(--polar-dx), var(--polar-dy));
+        opacity: 1;
+    }
+
+    60% {
+        transform: translate(var(--polar-dx), var(--polar-dy));
+        opacity: 1;
+    }
+
+    88% {
+        transform: translate(calc(var(--polar-dx) * 0.2), calc(var(--polar-dy) * 0.2));
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+}
+
 @keyframes snow-spin {
     from {
         transform: rotate(0deg);
@@ -746,6 +1059,18 @@ p {
     box-shadow: 0 4px 15px rgba(86, 148, 196, 0.2);
 }
 
+.collection-slot[data-egg="penguin"],
+.collection-slot[data-egg="present"],
+.collection-slot[data-egg="chocolate"],
+.collection-slot[data-egg="elf"],
+.collection-slot[data-egg="icicle"],
+.collection-slot[data-egg="polar"],
+.collection-slot[data-egg="yeti"] {
+    background: linear-gradient(135deg, #fcfeff 0%, #e6f6ff 55%, #dff4ff 100%);
+    border-color: #b8d9ec;
+    box-shadow: 0 4px 15px rgba(191, 224, 244, 0.26);
+}
+
 .collection-slot[data-egg="intro"],
 .collection-slot[data-egg="direction"],
 .collection-slot[data-egg="coming-soon"] {
@@ -833,6 +1158,16 @@ p {
     background: linear-gradient(135deg, #edf8ff 0%, #c7e6f7 100%);
 }
 
+.collection-slot.filled[data-egg="penguin"],
+.collection-slot.filled[data-egg="present"],
+.collection-slot.filled[data-egg="chocolate"],
+.collection-slot.filled[data-egg="elf"],
+.collection-slot.filled[data-egg="icicle"],
+.collection-slot.filled[data-egg="polar"],
+.collection-slot.filled[data-egg="yeti"] {
+    background: linear-gradient(135deg, #ffffff 0%, #eef9ff 58%, #e3f5ff 100%);
+}
+
 .collection-slot.filled[data-egg="intro"],
 .collection-slot.filled[data-egg="direction"],
 .collection-slot.filled[data-egg="coming-soon"] {
@@ -890,6 +1225,18 @@ p {
     color: #3c6d91;
 }
 
+.collection-slot[data-egg="penguin"] .slot-description,
+.collection-slot[data-egg="present"] .slot-description,
+.collection-slot[data-egg="chocolate"] .slot-description,
+.collection-slot[data-egg="elf"] .slot-description,
+.collection-slot[data-egg="icicle"] .slot-description,
+.collection-slot[data-egg="polar"] .slot-description,
+.collection-slot[data-egg="yeti"] .slot-description {
+    background: rgba(250, 254, 255, 0.97);
+    border: 2px dashed rgba(184, 217, 236, 0.95);
+    color: #517188;
+}
+
 .collection-slot[data-egg="intro"] .slot-description,
 .collection-slot[data-egg="direction"] .slot-description,
 .collection-slot[data-egg="coming-soon"] .slot-description {
@@ -922,6 +1269,13 @@ p {
 .collection-slot.filled[data-egg="sunken"] .slot-description,
 .collection-slot.filled[data-egg="trash"] .slot-description,
 .collection-slot.filled[data-egg="ice"] .slot-description,
+.collection-slot.filled[data-egg="penguin"] .slot-description,
+.collection-slot.filled[data-egg="present"] .slot-description,
+.collection-slot.filled[data-egg="chocolate"] .slot-description,
+.collection-slot.filled[data-egg="elf"] .slot-description,
+.collection-slot.filled[data-egg="icicle"] .slot-description,
+.collection-slot.filled[data-egg="polar"] .slot-description,
+.collection-slot.filled[data-egg="yeti"] .slot-description,
 .collection-slot.filled[data-egg="kraken"] .slot-description,
 .collection-slot.filled[data-egg="intro"] .slot-description,
 .collection-slot.filled[data-egg="direction"] .slot-description,
