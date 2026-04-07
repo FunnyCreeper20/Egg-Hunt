@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let elfEggFound = false; // track if the elf egg has been found
     let icicleEggFound = false; // track if the icicle egg has been found
     let polarEggFound = false; // track if the polar egg has been found
+    let yetiEggFound = false; // track if the yeti egg has been found
     let krakenEggFound = false; // track if the kraken egg has been found
     let eggSwingFound = false; // track if the eggswing has been found
     let deathEggFound = false; // track if the death egg has been found
@@ -44,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let galaxyEggFound = false; // track if the galaxy egg has been found
     let comingSoonEggFound = false; // track if the preview egg has been revealed
     let planetDestroyed = false; // track if the space planet has been destroyed
+    let devIceBiomeUnlocked = false; // temporary developer override for the ice biome
     let confettiLaunched = false;
     let eggsCollected = 0;
     let rainEggActive = false;
@@ -65,16 +67,21 @@ document.addEventListener('DOMContentLoaded', function() {
     let elfEggCycleTimeoutId = null;
     let icicleEggCycleTimeoutId = null;
     let polarEggCycleTimeoutId = null;
+    let yetiEggCycleTimeoutId = null;
     let directionEggIntervalId = null;
     let directionEggX = null;
     let directionEggY = null;
     let directionEggLastInputAt = 0;
     gameArea.style.background = backgrounds[currentBg];
 
+    function isIceBiomeUnlocked() {
+        return devIceBiomeUnlocked || (iceEggFound && snowEggFound);
+    }
+
     function getAvailableSceneIndexes() {
         const scenes = [0, 1, 2];
 
-        if (iceEggFound && snowEggFound) {
+        if (isIceBiomeUnlocked()) {
             scenes.push(3);
         }
 
@@ -193,6 +200,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function stopYetiEggCycle() {
+        if (yetiEggCycleTimeoutId !== null) {
+            clearTimeout(yetiEggCycleTimeoutId);
+            yetiEggCycleTimeoutId = null;
+        }
+    }
+
     function stopDirectionEggCycle() {
         if (directionEggIntervalId !== null) {
             clearInterval(directionEggIntervalId);
@@ -243,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function getCollectionParticlePalette(eggType) {
         const greenEggs = ['small', 'floral', 'cloud', 'rain', 'wood', 'maple', 'snow'];
         const blueEggs = ['bubble', 'fish', 'coral', 'sunken', 'trash', 'kraken'];
-        const iceEggs = ['ice', 'penguin', 'present', 'chocolate', 'elf', 'icicle', 'polar'];
+        const iceEggs = ['ice', 'penguin', 'present', 'chocolate', 'elf', 'icicle', 'polar', 'yeti'];
         const darkEggs = ['eggswing', 'death', 'sun', 'black-hole', 'asteroid', 'pixel', 'galaxy'];
 
         if (eggType === 'intro') {
@@ -338,6 +352,43 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 particle.remove();
             }, 700);
+        }
+    }
+
+    function emitIcicleShatterAtElement(element) {
+        if (!element || !element.isConnected) {
+            return;
+        }
+
+        const gameRect = gameArea.getBoundingClientRect();
+        const elementRect = element.getBoundingClientRect();
+        const centerX = elementRect.left - gameRect.left + elementRect.width / 2;
+        const centerY = elementRect.top - gameRect.top + elementRect.height - 10;
+        const colors = ['#f9feff', '#dff4ff', '#b8ddf1', '#92c9e6'];
+
+        for (let i = 0; i < 18; i += 1) {
+            const shard = document.createElement('span');
+            const angle = -Math.PI + Math.random() * Math.PI;
+            const distance = 18 + Math.random() * 34;
+            const width = 4 + Math.random() * 4;
+            const height = 10 + Math.random() * 10;
+
+            shard.className = 'screen-particle icicle-shard';
+            shard.style.width = `${width}px`;
+            shard.style.height = `${height}px`;
+            shard.style.left = `${centerX}px`;
+            shard.style.top = `${centerY}px`;
+            shard.style.background = colors[Math.floor(Math.random() * colors.length)];
+            shard.style.color = shard.style.background;
+            shard.style.setProperty('--particle-x', `${Math.cos(angle) * distance}px`);
+            shard.style.setProperty('--particle-y', `${-8 + Math.sin(angle) * distance}px`);
+            shard.style.setProperty('--particle-rotate', `${-180 + Math.random() * 360}deg`);
+
+            gameArea.appendChild(shard);
+
+            setTimeout(() => {
+                shard.remove();
+            }, 800);
         }
     }
 
@@ -812,8 +863,9 @@ document.addEventListener('DOMContentLoaded', function() {
         stopElfEggCycle();
         stopIcicleEggCycle();
         stopPolarEggCycle();
+        stopYetiEggCycle();
         stopDirectionEggCycle();
-        const decorations = gameArea.querySelectorAll('.egg, .flower, .tree, .star, .cloud, .rain-egg, .snow-egg, .bubble, .bubble-egg, .fish-egg, .ship, .mountain, .tentacle, .ink-splotch, .egg-swing, .asteroid-egg, .planet, .planet-explosion, .screen-particle, .frost-flake, .ice-ridge, .ice-present, .penguin-egg, .chocolate-egg, .elf-egg, .icicle-egg, .polar-egg');
+        const decorations = gameArea.querySelectorAll('.egg, .flower, .tree, .star, .cloud, .rain-egg, .snow-egg, .bubble, .bubble-egg, .fish-egg, .ship, .mountain, .tentacle, .ink-splotch, .egg-swing, .asteroid-egg, .planet, .planet-explosion, .screen-particle, .frost-flake, .ice-ground, .ice-present, .penguin-egg, .chocolate-egg, .elf-egg, .elf-footprint, .icicle-egg, .polar-egg, .yeti-egg');
         decorations.forEach(d => d.remove());
     }
 
@@ -1110,6 +1162,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const height = 70;
         const left = 70 + Math.random() * (800 - 140 - width);
         const egg = document.createElement('div');
+        const splash = document.createElement('div');
 
         egg.className = 'egg penguin-egg';
         egg.style.backgroundImage = 'url(images/penguinegg.png)';
@@ -1120,9 +1173,18 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.bottom = '-34px';
         egg.style.zIndex = '8';
 
+        splash.className = 'penguin-splash';
+        splash.style.left = `${left - 10}px`;
+        splash.style.bottom = '-6px';
+        splash.style.zIndex = '7';
+        splash.addEventListener('animationend', () => {
+            splash.remove();
+        });
+
         egg.addEventListener('click', () => {
             stopPenguinEggCycle();
             emitScreenParticlesAtElement(egg, 'penguin');
+            splash.remove();
             egg.remove();
             penguinEggFound = true;
             addEggToCollection('penguin', 'images/penguinegg.png', 'Penguin Egg');
@@ -1143,6 +1205,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        gameArea.appendChild(splash);
         gameArea.appendChild(egg);
     }
 
@@ -1223,7 +1286,7 @@ document.addEventListener('DOMContentLoaded', function() {
         egg.style.position = 'absolute';
         egg.style.cursor = 'pointer';
         egg.style.right = '108px';
-        egg.style.bottom = '104px';
+        egg.style.bottom = '74px';
         egg.style.zIndex = '2';
         egg.addEventListener('click', () => {
             emitScreenParticlesAtElement(egg, 'chocolate');
@@ -1249,8 +1312,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const width = 50;
             const height = 66;
             const startFromLeft = Math.random() < 0.5;
+            let footprintOffset = 0;
+            let footprintIntervalId = null;
+            let cleanupTimeoutId = null;
 
-            egg.className = 'egg elf-egg';
+            egg.className = `egg elf-egg ${startFromLeft ? 'elf-egg-left' : 'elf-egg-right'}`;
             egg.style.backgroundImage = 'url(images/elfegg.png)';
             egg.style.backgroundSize = 'cover';
             egg.style.width = `${width}px`;
@@ -1260,14 +1326,40 @@ document.addEventListener('DOMContentLoaded', function() {
             egg.style.bottom = '62px';
             egg.style.left = startFromLeft ? '-70px' : '820px';
             egg.style.zIndex = '3';
-            egg.style.animationDirection = startFromLeft ? 'normal' : 'reverse';
 
-            if (!startFromLeft) {
-                egg.style.transform = 'scaleX(-1)';
+            function leaveFootprint() {
+                if (!egg.isConnected || currentBg !== 3) {
+                    return;
+                }
+
+                const footprint = document.createElement('div');
+                const eggLeft = parseFloat(egg.style.left) || 0;
+                const baseBottom = 54;
+                const lateralOffset = footprintOffset % 2 === 0 ? 8 : 28;
+
+                footprint.className = 'elf-footprint';
+                footprint.style.left = `${eggLeft + lateralOffset}px`;
+                footprint.style.bottom = `${baseBottom}px`;
+                footprint.style.transform = startFromLeft
+                    ? `rotate(${footprintOffset % 2 === 0 ? -12 : 10}deg)`
+                    : `scaleX(-1) rotate(${footprintOffset % 2 === 0 ? -12 : 10}deg)`;
+
+                footprintOffset += 1;
+                gameArea.appendChild(footprint);
+
+                setTimeout(() => {
+                    footprint.remove();
+                }, 2400);
             }
 
             egg.addEventListener('click', () => {
                 stopElfEggCycle();
+                if (footprintIntervalId !== null) {
+                    clearInterval(footprintIntervalId);
+                }
+                if (cleanupTimeoutId !== null) {
+                    clearTimeout(cleanupTimeoutId);
+                }
                 emitScreenParticlesAtElement(egg, 'elf');
                 egg.remove();
                 elfEggFound = true;
@@ -1279,23 +1371,48 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
+                if (footprintIntervalId !== null) {
+                    clearInterval(footprintIntervalId);
+                }
+                if (cleanupTimeoutId !== null) {
+                    clearTimeout(cleanupTimeoutId);
+                }
                 egg.remove();
 
                 if (currentBg === 3 && !elfEggFound) {
                     elfEggCycleTimeoutId = setTimeout(() => {
                         elfEggCycleTimeoutId = null;
                         startElfEggCycle();
-                    }, 1800 + Math.random() * 3200);
+                    }, 1200 + Math.random() * 2600);
                 }
             });
 
             gameArea.appendChild(egg);
+            leaveFootprint();
+            footprintIntervalId = setInterval(leaveFootprint, 420);
+            cleanupTimeoutId = setTimeout(() => {
+                if (!egg.isConnected || elfEggFound) {
+                    return;
+                }
+
+                if (footprintIntervalId !== null) {
+                    clearInterval(footprintIntervalId);
+                }
+                egg.remove();
+
+                if (currentBg === 3) {
+                    elfEggCycleTimeoutId = setTimeout(() => {
+                        elfEggCycleTimeoutId = null;
+                        startElfEggCycle();
+                    }, 1200 + Math.random() * 2600);
+                }
+            }, 7600);
         };
 
         elfEggCycleTimeoutId = setTimeout(() => {
             elfEggCycleTimeoutId = null;
             spawnElfEgg();
-        }, 1600 + Math.random() * 2600);
+        }, 1000 + Math.random() * 2200);
     }
 
     function startIcicleEggCycle() {
@@ -1338,7 +1455,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 if (egg.isConnected && !icicleEggFound) {
-                    emitScreenParticlesAtElement(egg, 'icicle');
+                    emitIcicleShatterAtElement(egg);
                     egg.remove();
                 }
 
@@ -1372,8 +1489,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const egg = document.createElement('div');
             const width = 58;
             const height = 72;
-            const startLeft = 273;
-            const startTop = 369;
+            const startLeft = 143;
+            const startTop = 409;
             const targetLeft = 300 + Math.random() * 400;
             const targetTop = 446 + Math.random() * 52;
             const dx = targetLeft - startLeft;
@@ -1422,6 +1539,70 @@ document.addEventListener('DOMContentLoaded', function() {
             polarEggCycleTimeoutId = null;
             spawnPolarEgg();
         }, 1400 + Math.random() * 2400);
+    }
+
+    function startYetiEggCycle() {
+        if (currentBg !== 3 || yetiEggFound) {
+            return;
+        }
+
+        let egg = gameArea.querySelector('.yeti-egg');
+        const peekPositions = [
+            { left: '107px', top: '168px' },
+            { left: '145px', top: '90px' },
+            { left: '196px', top: '152px' }
+        ];
+
+        if (!egg) {
+            egg = document.createElement('div');
+            egg.className = 'egg yeti-egg yeti-egg-hidden';
+            egg.style.backgroundImage = 'url(images/yetiegg.png)';
+            egg.style.backgroundSize = 'cover';
+            egg.style.width = '54px';
+            egg.style.height = '70px';
+            egg.style.position = 'absolute';
+            egg.style.cursor = 'pointer';
+            egg.style.zIndex = '0';
+            egg.addEventListener('click', () => {
+                stopYetiEggCycle();
+                emitScreenParticlesAtElement(egg, 'yeti');
+                egg.remove();
+                yetiEggFound = true;
+                addEggToCollection('yeti', 'images/yetiegg.png', 'Yeti Egg');
+            });
+            gameArea.appendChild(egg);
+        }
+
+        const showYetiEgg = () => {
+            if (currentBg !== 3 || yetiEggFound || !egg.isConnected) {
+                return;
+            }
+
+            const position = peekPositions[Math.floor(Math.random() * peekPositions.length)];
+            egg.style.left = position.left;
+            egg.style.top = position.top;
+            egg.classList.remove('yeti-egg-hidden');
+            egg.classList.add('yeti-egg-visible');
+
+            yetiEggCycleTimeoutId = setTimeout(() => {
+                if (currentBg !== 3 || yetiEggFound || !egg.isConnected) {
+                    return;
+                }
+
+                egg.classList.remove('yeti-egg-visible');
+                egg.classList.add('yeti-egg-hidden');
+
+                yetiEggCycleTimeoutId = setTimeout(() => {
+                    yetiEggCycleTimeoutId = null;
+                    showYetiEgg();
+                }, 1200 + Math.random() * 4800);
+            }, 2200);
+        };
+
+        yetiEggCycleTimeoutId = setTimeout(() => {
+            yetiEggCycleTimeoutId = null;
+            showYetiEgg();
+        }, 900 + Math.random() * 1600);
     }
 
     function addDeathEgg() {
@@ -1795,25 +1976,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function addIceRidges() {
-        const ridgeConfigs = [
-            { left: -30, width: 300, height: 140, opacity: 0.7 },
-            { left: 170, width: 260, height: 120, opacity: 0.62 },
-            { left: 410, width: 330, height: 150, opacity: 0.76 },
-            { left: 610, width: 240, height: 110, opacity: 0.58 }
-        ];
+    function addIceGround() {
+        const ground = document.createElement('div');
 
-        ridgeConfigs.forEach(config => {
-            const ridge = document.createElement('div');
+        ground.className = 'ice-ground';
+        ground.style.backgroundImage = 'url(images/flowers/iceground.png)';
+        ground.style.bottom = '0';
+        ground.style.width = '100%';
+        ground.style.height = '100px';
+        ground.style.opacity = '0.85';
 
-            ridge.className = 'ice-ridge';
-            ridge.style.left = `${config.left}px`;
-            ridge.style.width = `${config.width}px`;
-            ridge.style.height = `${config.height}px`;
-            ridge.style.opacity = `${config.opacity}`;
-
-            gameArea.appendChild(ridge);
-        });
+        gameArea.appendChild(ground);
     }
 
     function addFrostFlurries() {
@@ -2126,7 +2299,7 @@ document.addEventListener('DOMContentLoaded', function() {
             addBlackHoleEgg();
         } else if (currentBg === 3) {
             addIceMountain();
-            addIceRidges();
+            addIceGround();
             addFrostFlurries();
             addIcePresents();
             addPresentEgg();
@@ -2135,6 +2308,7 @@ document.addEventListener('DOMContentLoaded', function() {
             startElfEggCycle();
             startIcicleEggCycle();
             startPolarEggCycle();
+            startYetiEggCycle();
         }
 
         addDirectionEgg();
@@ -2187,6 +2361,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.addEventListener('keydown', event => {
         if (event.repeat) {
+            return;
+        }
+
+        if (event.shiftKey && event.key === 'I') {
+            if (!isIceBiomeUnlocked()) {
+                devIceBiomeUnlocked = true;
+                renderCurrentScene();
+            }
             return;
         }
 
