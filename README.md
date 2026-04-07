@@ -1,10 +1,10 @@
 This is a little thing I made for easter.
 
 All the files got corruptted...
+Upadte on the situation:
+I FIXED IT AFTER 2 HRS :DDDDdD
 
 LINK: https://funnycreeper20.github.io/Egg-Hunt/
-
-:(
 
 WHATS TO COME:
 * Pengiun Egg - done
