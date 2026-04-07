@@ -4,11 +4,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalElement = document.getElementById('total');
     const introEggElement = document.querySelector('.intro-egg');
     const collectionSlots = document.querySelectorAll('.collection-slot');
-    const backgrounds = [
-        'linear-gradient(to bottom, #87ceeb, #98fb98)', // sky to grass
-        'linear-gradient(to bottom, #164cb7, #0b0b57)', // navy to blue
-        '#000000' // space
-    ];
+    const backgrounds = {
+        0: 'linear-gradient(to bottom, #87ceeb, #98fb98)', // field
+        1: 'linear-gradient(to bottom, #164cb7, #0b0b57)', // ocean
+        2: '#000000', // space
+        3: 'linear-gradient(to bottom, #dff6ff 0%, #9bd3ff 45%, #b7ebff 72%, #edfaff 100%)' // ice stage
+    };
 
     let currentBg = 0; //0 is field, 1 is ocean, 2 is space
     let introEggFound = false; // track if the intro egg has been found
@@ -26,6 +27,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let sunkenEggFound = false; // track if the sunken egg has been found
     let trashEggFound = false; // track if the trash egg has been found
     let iceEggFound = false; // track if the ice egg has been found
+    let penguinEggFound = false; // track if the penguin egg has been found
+    let presentEggFound = false; // track if the present egg has been found
+    let chocolateEggFound = false; // track if the chocolate egg has been found
+    let chocolateEggRevealed = false; // track if the presents have been opened
+    let elfEggFound = false; // track if the elf egg has been found
+    let icicleEggFound = false; // track if the icicle egg has been found
+    let polarEggFound = false; // track if the polar egg has been found
     let krakenEggFound = false; // track if the kraken egg has been found
     let eggSwingFound = false; // track if the eggswing has been found
     let deathEggFound = false; // track if the death egg has been found
@@ -53,11 +61,25 @@ document.addEventListener('DOMContentLoaded', function() {
     let asteroidEggIntervalId = null;
     let blackHoleAttractionIntervalId = null;
     let iceEggIntervalId = null;
+    let penguinEggCycleTimeoutId = null;
+    let elfEggCycleTimeoutId = null;
+    let icicleEggCycleTimeoutId = null;
+    let polarEggCycleTimeoutId = null;
     let directionEggIntervalId = null;
     let directionEggX = null;
     let directionEggY = null;
     let directionEggLastInputAt = 0;
     gameArea.style.background = backgrounds[currentBg];
+
+    function getAvailableSceneIndexes() {
+        const scenes = [0, 1, 2];
+
+        if (iceEggFound && snowEggFound) {
+            scenes.push(3);
+        }
+
+        return scenes;
+    }
 
     function stopRainEggCycle() {
         rainEggActive = false;
@@ -143,6 +165,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function stopPenguinEggCycle() {
+        if (penguinEggCycleTimeoutId !== null) {
+            clearTimeout(penguinEggCycleTimeoutId);
+            penguinEggCycleTimeoutId = null;
+        }
+    }
+
+    function stopElfEggCycle() {
+        if (elfEggCycleTimeoutId !== null) {
+            clearTimeout(elfEggCycleTimeoutId);
+            elfEggCycleTimeoutId = null;
+        }
+    }
+
+    function stopIcicleEggCycle() {
+        if (icicleEggCycleTimeoutId !== null) {
+            clearTimeout(icicleEggCycleTimeoutId);
+            icicleEggCycleTimeoutId = null;
+        }
+    }
+
+    function stopPolarEggCycle() {
+        if (polarEggCycleTimeoutId !== null) {
+            clearTimeout(polarEggCycleTimeoutId);
+            polarEggCycleTimeoutId = null;
+        }
+    }
+
     function stopDirectionEggCycle() {
         if (directionEggIntervalId !== null) {
             clearInterval(directionEggIntervalId);
@@ -192,7 +242,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getCollectionParticlePalette(eggType) {
         const greenEggs = ['small', 'floral', 'cloud', 'rain', 'wood', 'maple', 'snow'];
-        const blueEggs = ['bubble', 'fish', 'coral', 'sunken', 'trash', 'ice', 'kraken'];
+        const blueEggs = ['bubble', 'fish', 'coral', 'sunken', 'trash', 'kraken'];
+        const iceEggs = ['ice', 'penguin', 'present', 'chocolate', 'elf', 'icicle', 'polar'];
         const darkEggs = ['eggswing', 'death', 'sun', 'black-hole', 'asteroid', 'pixel', 'galaxy'];
 
         if (eggType === 'intro') {
@@ -209,6 +260,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (blueEggs.includes(eggType)) {
             return ['#8bd4ff', '#53aee8', '#c2ecff'];
+        }
+
+        if (iceEggs.includes(eggType)) {
+            return ['#f7fdff', '#d8edf8', '#bcd8ea'];
         }
 
         if (darkEggs.includes(eggType)) {
@@ -753,8 +808,12 @@ document.addEventListener('DOMContentLoaded', function() {
         stopAsteroidEggCycle();
         stopBlackHoleAttraction();
         stopIceEggCycle();
+        stopPenguinEggCycle();
+        stopElfEggCycle();
+        stopIcicleEggCycle();
+        stopPolarEggCycle();
         stopDirectionEggCycle();
-        const decorations = gameArea.querySelectorAll('.egg, .flower, .tree, .star, .cloud, .rain-egg, .snow-egg, .bubble, .bubble-egg, .fish-egg, .ship, .tentacle, .ink-splotch, .egg-swing, .asteroid-egg, .planet, .planet-explosion, .screen-particle');
+        const decorations = gameArea.querySelectorAll('.egg, .flower, .tree, .star, .cloud, .rain-egg, .snow-egg, .bubble, .bubble-egg, .fish-egg, .ship, .mountain, .tentacle, .ink-splotch, .egg-swing, .asteroid-egg, .planet, .planet-explosion, .screen-particle, .frost-flake, .ice-ridge, .ice-present, .penguin-egg, .chocolate-egg, .elf-egg, .icicle-egg, .polar-egg');
         decorations.forEach(d => d.remove());
     }
 
@@ -1042,6 +1101,329 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 16);
     }
 
+    function startPenguinEggCycle() {
+        if (currentBg !== 3 || penguinEggFound || gameArea.querySelector('.penguin-egg')) {
+            return;
+        }
+
+        const width = 54;
+        const height = 70;
+        const left = 70 + Math.random() * (800 - 140 - width);
+        const egg = document.createElement('div');
+
+        egg.className = 'egg penguin-egg';
+        egg.style.backgroundImage = 'url(images/penguinegg.png)';
+        egg.style.backgroundSize = 'cover';
+        egg.style.width = `${width}px`;
+        egg.style.height = `${height}px`;
+        egg.style.left = `${left}px`;
+        egg.style.bottom = '-34px';
+        egg.style.zIndex = '8';
+
+        egg.addEventListener('click', () => {
+            stopPenguinEggCycle();
+            emitScreenParticlesAtElement(egg, 'penguin');
+            egg.remove();
+            penguinEggFound = true;
+            addEggToCollection('penguin', 'images/penguinegg.png', 'Penguin Egg');
+        });
+
+        egg.addEventListener('animationend', event => {
+            if (event.animationName !== 'penguin-egg-hop') {
+                return;
+            }
+
+            egg.remove();
+
+            if (currentBg === 3 && !penguinEggFound) {
+                penguinEggCycleTimeoutId = setTimeout(() => {
+                    penguinEggCycleTimeoutId = null;
+                    startPenguinEggCycle();
+                }, 900 + Math.random() * 1400);
+            }
+        });
+
+        gameArea.appendChild(egg);
+    }
+
+    function addIcePresents() {
+        if (chocolateEggRevealed) {
+            return;
+        }
+
+        const presents = document.createElement('div');
+
+        presents.className = 'ice-present';
+        presents.style.backgroundImage = 'url(images/flowers/presents.png)';
+        presents.style.right = '60px';
+        presents.style.bottom = '70px';
+        presents.style.width = '150px';
+        presents.style.height = '120px';
+
+        if (presentEggFound) {
+            presents.classList.add('ice-present-interactive');
+            presents.addEventListener('click', () => {
+                chocolateEggRevealed = true;
+                presents.remove();
+                addChocolateEgg();
+            });
+        }
+
+        gameArea.appendChild(presents);
+    }
+
+    function addPresentEgg() {
+        if (presentEggFound) {
+            return;
+        }
+
+        const egg = document.createElement('div');
+
+        egg.className = 'egg present-egg';
+        egg.style.backgroundImage = 'url(images/presentegg.png)';
+        egg.style.backgroundSize = 'cover';
+        egg.style.width = '50px';
+        egg.style.height = '63px';
+        egg.style.position = 'absolute';
+        egg.style.cursor = 'pointer';
+        egg.style.right = '155px';
+        egg.style.bottom = '104px';
+        egg.style.zIndex = '2';
+        egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'present');
+            egg.style.display = 'none';
+            presentEggFound = true;
+            addEggToCollection('present', 'images/presentegg.png', 'Present Egg');
+            const presents = gameArea.querySelector('.ice-present');
+            if (presents && !chocolateEggRevealed) {
+                presents.classList.add('ice-present-interactive');
+                presents.addEventListener('click', () => {
+                    chocolateEggRevealed = true;
+                    presents.remove();
+                    addChocolateEgg();
+                }, { once: true });
+            }
+        });
+
+        gameArea.appendChild(egg);
+    }
+
+    function addChocolateEgg() {
+        if (!chocolateEggRevealed || chocolateEggFound || gameArea.querySelector('.chocolate-egg')) {
+            return;
+        }
+
+        const egg = document.createElement('div');
+
+        egg.className = 'egg chocolate-egg';
+        egg.style.backgroundImage = 'url(images/chocolateegg.png)';
+        egg.style.backgroundSize = 'cover';
+        egg.style.width = '54px';
+        egg.style.height = '68px';
+        egg.style.position = 'absolute';
+        egg.style.cursor = 'pointer';
+        egg.style.right = '108px';
+        egg.style.bottom = '104px';
+        egg.style.zIndex = '2';
+        egg.addEventListener('click', () => {
+            emitScreenParticlesAtElement(egg, 'chocolate');
+            egg.style.display = 'none';
+            chocolateEggFound = true;
+            addEggToCollection('chocolate', 'images/chocolateegg.png', 'Chocolate Egg');
+        });
+
+        gameArea.appendChild(egg);
+    }
+
+    function startElfEggCycle() {
+        if (currentBg !== 3 || elfEggFound || gameArea.querySelector('.elf-egg')) {
+            return;
+        }
+
+        const spawnElfEgg = () => {
+            if (currentBg !== 3 || elfEggFound || gameArea.querySelector('.elf-egg')) {
+                return;
+            }
+
+            const egg = document.createElement('div');
+            const width = 50;
+            const height = 66;
+            const startFromLeft = Math.random() < 0.5;
+
+            egg.className = 'egg elf-egg';
+            egg.style.backgroundImage = 'url(images/elfegg.png)';
+            egg.style.backgroundSize = 'cover';
+            egg.style.width = `${width}px`;
+            egg.style.height = `${height}px`;
+            egg.style.position = 'absolute';
+            egg.style.cursor = 'pointer';
+            egg.style.bottom = '62px';
+            egg.style.left = startFromLeft ? '-70px' : '820px';
+            egg.style.zIndex = '3';
+            egg.style.animationDirection = startFromLeft ? 'normal' : 'reverse';
+
+            if (!startFromLeft) {
+                egg.style.transform = 'scaleX(-1)';
+            }
+
+            egg.addEventListener('click', () => {
+                stopElfEggCycle();
+                emitScreenParticlesAtElement(egg, 'elf');
+                egg.remove();
+                elfEggFound = true;
+                addEggToCollection('elf', 'images/elfegg.png', 'Elf Egg');
+            });
+
+            egg.addEventListener('animationend', event => {
+                if (event.animationName !== 'elf-egg-walk') {
+                    return;
+                }
+
+                egg.remove();
+
+                if (currentBg === 3 && !elfEggFound) {
+                    elfEggCycleTimeoutId = setTimeout(() => {
+                        elfEggCycleTimeoutId = null;
+                        startElfEggCycle();
+                    }, 1800 + Math.random() * 3200);
+                }
+            });
+
+            gameArea.appendChild(egg);
+        };
+
+        elfEggCycleTimeoutId = setTimeout(() => {
+            elfEggCycleTimeoutId = null;
+            spawnElfEgg();
+        }, 1600 + Math.random() * 2600);
+    }
+
+    function startIcicleEggCycle() {
+        if (currentBg !== 3 || icicleEggFound || gameArea.querySelector('.icicle-egg')) {
+            return;
+        }
+
+        const spawnIcicleEgg = () => {
+            if (currentBg !== 3 || icicleEggFound || gameArea.querySelector('.icicle-egg')) {
+                return;
+            }
+
+            const egg = document.createElement('div');
+            const width = 46;
+            const height = 72;
+            const left = 40 + Math.random() * (800 - 80 - width);
+
+            egg.className = 'egg icicle-egg';
+            egg.style.backgroundImage = 'url(images/icicleegg.png)';
+            egg.style.backgroundSize = 'cover';
+            egg.style.width = `${width}px`;
+            egg.style.height = `${height}px`;
+            egg.style.position = 'absolute';
+            egg.style.cursor = 'pointer';
+            egg.style.left = `${left}px`;
+            egg.style.top = '-90px';
+            egg.style.zIndex = '3';
+
+            egg.addEventListener('click', () => {
+                stopIcicleEggCycle();
+                emitScreenParticlesAtElement(egg, 'icicle');
+                egg.remove();
+                icicleEggFound = true;
+                addEggToCollection('icicle', 'images/icicleegg.png', 'Icicle Egg');
+            });
+
+            egg.addEventListener('animationend', event => {
+                if (event.animationName !== 'icicle-egg-fall') {
+                    return;
+                }
+
+                if (egg.isConnected && !icicleEggFound) {
+                    emitScreenParticlesAtElement(egg, 'icicle');
+                    egg.remove();
+                }
+
+                if (currentBg === 3 && !icicleEggFound) {
+                    icicleEggCycleTimeoutId = setTimeout(() => {
+                        icicleEggCycleTimeoutId = null;
+                        startIcicleEggCycle();
+                    }, 1300 + Math.random() * 2200);
+                }
+            });
+
+            gameArea.appendChild(egg);
+        };
+
+        icicleEggCycleTimeoutId = setTimeout(() => {
+            icicleEggCycleTimeoutId = null;
+            spawnIcicleEgg();
+        }, 1100 + Math.random() * 2200);
+    }
+
+    function startPolarEggCycle() {
+        if (currentBg !== 3 || polarEggFound || gameArea.querySelector('.polar-egg')) {
+            return;
+        }
+
+        const spawnPolarEgg = () => {
+            if (currentBg !== 3 || polarEggFound || gameArea.querySelector('.polar-egg')) {
+                return;
+            }
+
+            const egg = document.createElement('div');
+            const width = 58;
+            const height = 72;
+            const startLeft = 273;
+            const startTop = 369;
+            const targetLeft = 300 + Math.random() * 400;
+            const targetTop = 446 + Math.random() * 52;
+            const dx = targetLeft - startLeft;
+            const dy = targetTop - startTop;
+
+            egg.className = 'egg polar-egg';
+            egg.style.backgroundImage = 'url(images/polaregg.png)';
+            egg.style.backgroundSize = 'cover';
+            egg.style.width = `${width}px`;
+            egg.style.height = `${height}px`;
+            egg.style.position = 'absolute';
+            egg.style.cursor = 'pointer';
+            egg.style.left = `${startLeft}px`;
+            egg.style.top = `${startTop}px`;
+            egg.style.zIndex = '4';
+            egg.style.setProperty('--polar-dx', `${dx}px`);
+            egg.style.setProperty('--polar-dy', `${dy}px`);
+
+            egg.addEventListener('click', () => {
+                stopPolarEggCycle();
+                emitScreenParticlesAtElement(egg, 'polar');
+                egg.remove();
+                polarEggFound = true;
+                addEggToCollection('polar', 'images/polaregg.png', 'Polar Egg');
+            });
+
+            egg.addEventListener('animationend', event => {
+                if (event.animationName !== 'polar-egg-trip') {
+                    return;
+                }
+
+                egg.remove();
+
+                if (currentBg === 3 && !polarEggFound) {
+                    polarEggCycleTimeoutId = setTimeout(() => {
+                        polarEggCycleTimeoutId = null;
+                        startPolarEggCycle();
+                    }, 2000 + Math.random() * 2600);
+                }
+            });
+
+            gameArea.appendChild(egg);
+        };
+
+        polarEggCycleTimeoutId = setTimeout(() => {
+            polarEggCycleTimeoutId = null;
+            spawnPolarEgg();
+        }, 1400 + Math.random() * 2400);
+    }
+
     function addDeathEgg() {
         if (deathEggFound) return;
 
@@ -1140,6 +1522,19 @@ document.addEventListener('DOMContentLoaded', function() {
         ship.style.width = '380px';
         ship.style.height = '300px';
         gameArea.appendChild(ship);
+    }
+
+    function addIceMountain() {
+        const mountain = document.createElement('div');
+
+        mountain.className = 'mountain';
+        mountain.style.backgroundImage = 'url(images/flowers/mountain.png)';
+        mountain.style.left = '-18px';
+        mountain.style.bottom = '-85px';
+        mountain.style.width = '640px';
+        mountain.style.height = '560px';
+
+        gameArea.appendChild(mountain);
     }
 
     function startTentacleCycle() {
@@ -1400,6 +1795,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function addIceRidges() {
+        const ridgeConfigs = [
+            { left: -30, width: 300, height: 140, opacity: 0.7 },
+            { left: 170, width: 260, height: 120, opacity: 0.62 },
+            { left: 410, width: 330, height: 150, opacity: 0.76 },
+            { left: 610, width: 240, height: 110, opacity: 0.58 }
+        ];
+
+        ridgeConfigs.forEach(config => {
+            const ridge = document.createElement('div');
+
+            ridge.className = 'ice-ridge';
+            ridge.style.left = `${config.left}px`;
+            ridge.style.width = `${config.width}px`;
+            ridge.style.height = `${config.height}px`;
+            ridge.style.opacity = `${config.opacity}`;
+
+            gameArea.appendChild(ridge);
+        });
+    }
+
+    function addFrostFlurries() {
+        for (let i = 0; i < 28; i += 1) {
+            const flake = document.createElement('div');
+            const size = 5 + Math.random() * 9;
+
+            flake.className = 'frost-flake';
+            flake.style.width = `${size}px`;
+            flake.style.height = `${size}px`;
+            flake.style.left = `${Math.random() * (800 - size)}px`;
+            flake.style.top = `${-40 - Math.random() * 520}px`;
+            flake.style.animationDuration = `${5.2 + Math.random() * 4.2}s`;
+            flake.style.animationDelay = `${Math.random() * 2.5}s`;
+            flake.style.setProperty('--flake-drift', `${-26 + Math.random() * 52}px`);
+            flake.style.setProperty('--flake-spin', `${-120 + Math.random() * 240}deg`);
+
+            gameArea.appendChild(flake);
+        }
+    }
+
     function addPlanet() {
         const planet = document.createElement('div');
         const size = 120 + Math.random() * 120;
@@ -1652,6 +2087,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function renderCurrentScene() {
+        const availableScenes = getAvailableSceneIndexes();
+
+        if (!availableScenes.includes(currentBg)) {
+            currentBg = availableScenes[0];
+        }
+
         gameArea.style.background = backgrounds[currentBg];
         clearDecorations();
 
@@ -1683,14 +2124,28 @@ document.addEventListener('DOMContentLoaded', function() {
             addDeathEgg();
             addSunEgg();
             addBlackHoleEgg();
+        } else if (currentBg === 3) {
+            addIceMountain();
+            addIceRidges();
+            addFrostFlurries();
+            addIcePresents();
+            addPresentEgg();
+            addChocolateEgg();
+            startPenguinEggCycle();
+            startElfEggCycle();
+            startIcicleEggCycle();
+            startPolarEggCycle();
         }
 
         addDirectionEgg();
     }
 
     function changeScene(direction) {
+        const availableScenes = getAvailableSceneIndexes();
+        const currentSceneIndex = availableScenes.indexOf(currentBg);
+
         moveDirectionEggTowardCenter();
-        currentBg = (currentBg + direction + backgrounds.length) % backgrounds.length;
+        currentBg = availableScenes[(currentSceneIndex + direction + availableScenes.length) % availableScenes.length];
         renderCurrentScene();
     }
 
