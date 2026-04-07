@@ -5,7 +5,7 @@ LINK: https://funnycreeper20.github.io/Egg-Hunt/
 WHATS TO COME:
 * Pengiun Egg - done
 * Ice Biome - done
-* Polar Bear Egg
+* Polar Bear Egg - done
 * Igloo Egg
 * Merging
 * Ball Egg
