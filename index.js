@@ -46,10 +46,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let comingSoonEggFound = false; // track if the preview egg has been revealed
     let planetDestroyed = false; // track if the space planet has been destroyed
     let devIceBiomeUnlocked = false; // temporary developer override for the ice biome
-    let confettiLaunched = false;
-    let eggsCollected = 0;
-    let rainEggActive = false;
-    let rainEggFrameId = null;
+    let confettiLaunched = false; // track if the confetti celebration has been launched
+    let eggsCollected = 0; //total eggs collected
+    let rainEggActive = false; //track if the rain egg cycle is active
+    let rainEggFrameId = null; //store the requestAnimationFrame ID for the rain egg cycle
     let snowEggActive = false;
     let snowEggFrameId = null;
     let bubbleIntervalId = null;
@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!element || !element.isConnected) {
             return;
         }
-
+        
         const colors = getCollectionParticlePalette(eggType);
         const gameRect = gameArea.getBoundingClientRect();
         const elementRect = element.getBoundingClientRect();
@@ -870,7 +870,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function addGreenEgg() {
-        if (eggFound) return; // don't add if already found
+        if (eggFound) return; // don't add if already found and it is eggFound since it is first egg every created
         const egg = document.createElement('div');
         egg.className = 'egg';
         egg.style.backgroundImage = 'url(images/floralegg.png)';
