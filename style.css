@@ -254,6 +254,7 @@ p {
 .icicle-egg {
     animation: icicle-egg-fall 2.35s linear forwards;
     transform-origin: center top;
+    opacity: 0.8;
 }
 
 .icicle-shard {
