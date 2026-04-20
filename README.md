@@ -6,7 +6,7 @@ WHATS TO COME:
 * Pengiun Egg - done
 * Ice Biome - done
 * Polar Bear Egg - done
-* Igloo Egg
+* Igloo Egg - asset
 * Merging
 * Ball Egg
 * Present Egg - done
@@ -16,6 +16,6 @@ WHATS TO COME:
 * Mini Confetti Bursts for completing a green/blue/black/???
 * Icicle Egg - done
 * Mountain - done
-* Mountain Egg - NEEDS TO BE FIXED I DID THIS WRONG BUT I'M TOO TIRED TO CARE RIGHT NOW
+* Mountain Egg - asset
 * Yeti Egg - done
 * Get rid of secret dev key
